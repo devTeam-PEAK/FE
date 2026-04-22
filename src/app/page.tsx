@@ -40,7 +40,7 @@ export default function Home() {
           </TooltipContent>
         </Tooltip>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button variant="btnWhite" size="full">
               <span className="p1-semibold">내 음원 홍보 진단하기</span>
             </Button>

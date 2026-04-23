@@ -1,8 +1,8 @@
 export default function Header() {
   return (
-    <div className="flex h-14 items-center justify-between">
+    <div className="sticky top-0 z-999 flex h-14 w-full items-center justify-between bg-white">
       <div className="h3-bold text-main">Peak</div>
-      <div>이미지</div>
+      <div>마이페이지</div>
     </div>
   );
 }

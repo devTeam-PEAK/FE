@@ -7,7 +7,7 @@ import Autoplay from "embla-carousel-autoplay";
 export default function OnboardingPage() {
   const autoplay = useRef(
     Autoplay({
-      delay: 3000,
+      delay: 5000,
       stopOnInteraction: false, // 유저가 터치해도 계속 재생
     })
   );
@@ -43,8 +43,8 @@ export default function OnboardingPage() {
     };
   }, [emblaApi]);
   return (
-    <main className="p-5">
-      <div className="mt-25 mb-24 flex flex-col items-center gap-12 text-center">
+    <main className="px-5">
+      <div className="mt-20 mb-16 flex flex-col items-center gap-12 text-center">
         <div className="flex flex-col gap-6">
           <h1 className="h1-bold text-font-basic">
             새 음원 홍보,
@@ -53,7 +53,7 @@ export default function OnboardingPage() {
             <br />
             막막하셨죠?
           </h1>
-          <p className="text-font-middle p3-regular">
+          <p className="text-font-middle p2-regular">
             이젠 혼자 하지 마세요.
             <br />
             PEAK가 도와드릴게요!

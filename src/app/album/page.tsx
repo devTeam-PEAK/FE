@@ -5,8 +5,8 @@ import { CalendarIcon, PlusIcon } from "lucide-react";
 
 export default function AlbumPage() {
   return (
-    <main className="flex flex-col gap-5">
-      <div className="mt-10 flex flex-col gap-1">
+    <main className="flex flex-col">
+      <div className="mt-10 mb-7 flex flex-col gap-1">
         <h4 className="h3-bold text-font-basic">신곡에 대해 얘기해주세요</h4>
         <p className="p2-regular text-font-middle">
           간단하게만 채워도 괜찮아요
@@ -14,8 +14,8 @@ export default function AlbumPage() {
           입력하는 대로 미리보기 페이지에 반영돼요 👀
         </p>
       </div>
-      <section className="flex flex-col gap-2">
-        <div className="bg-grey1 border-border mb-3 flex h-22 w-22 items-center justify-center rounded-2xl border">
+      <section className="mb-5 flex flex-col gap-2">
+        <div className="bg-grey1 border-border mb-1 flex h-22 w-22 items-center justify-center rounded-2xl border">
           <button className="c1-medium text-font-light flex flex-col items-center hover:cursor-pointer">
             <PlusIcon size={40} />
             <span>커버 추가</span>

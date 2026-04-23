@@ -1,11 +1,20 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  useEffect(() => {
+    const done = localStorage.getItem("onboarding");
+    if (!done) router.replace("/onboarding");
+  }, [router]);
+
   return (
     <main className="p-5">
       <div className="mt-25 mb-24 flex flex-col items-center gap-8 text-center">

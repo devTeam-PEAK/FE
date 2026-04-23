@@ -3,8 +3,10 @@ import { useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
 import Autoplay from "embla-carousel-autoplay";
+import { useRouter } from "next/navigation";
 
 export default function OnboardingPage() {
+  const router = useRouter();
   const autoplay = useRef(
     Autoplay({
       delay: 5000,
@@ -18,7 +20,16 @@ export default function OnboardingPage() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canNext, setCanNext] = useState(false);
   const scrollTo = (index: number) => emblaApi?.scrollTo(index);
-  const scrollNext = () => emblaApi?.scrollNext();
+
+  const handleFinish = () => {
+    localStorage.setItem("onboarding", "done");
+    router.push("/");
+  };
+  const handleNext = () => {
+    if (canNext) emblaApi?.scrollNext();
+    else handleFinish();
+  };
+
   useEffect(() => {
     if (!emblaApi) return;
 
@@ -109,11 +120,13 @@ export default function OnboardingPage() {
           variant="btnPurple"
           size="full"
           className="embla__next"
-          onClick={scrollNext}
+          onClick={handleNext}
         >
-          <span className="p1-bold">다음</span>
+          <span className="p1-bold">{canNext ? "다음" : "시작하기"}</span>
         </Button>
-        <button className="text-font-light p2-semibold">건너뛰기</button>
+        <button className="text-font-light p2-semibold" onClick={handleFinish}>
+          건너뛰기
+        </button>
       </div>
     </main>
   );

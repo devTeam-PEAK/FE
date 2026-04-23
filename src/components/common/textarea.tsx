@@ -10,7 +10,7 @@ export function Textarea({ label, className, maxLength, ...props }: Props) {
   return (
     <div
       className={cn(
-        "flex w-full flex-col gap-1 rounded-lg border px-4 py-2",
+        "flex h-33 w-full flex-col gap-1 rounded-lg border px-4 py-2",
         "border-border bg-grey1",
         className
       )}
@@ -19,7 +19,7 @@ export function Textarea({ label, className, maxLength, ...props }: Props) {
 
       <textarea
         className={cn(
-          "h-32 resize-none bg-transparent p-0 caret-current outline-none",
+          "flex-1 resize-none bg-transparent p-0 caret-current outline-none",
           "p2-regular text-font-basic",
           "placeholder:text-font-light"
         )}

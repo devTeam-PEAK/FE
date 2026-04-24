@@ -9,8 +9,14 @@ import {
 } from "@/components/ui/tooltip";
 
 export default function Home() {
-  const [showIntro, setShowIntro] = useState(true);
-  const dismissIntro = () => setShowIntro(false);
+  const [showIntro, setShowIntro] = useState(
+    () => typeof window !== "undefined" && !localStorage.getItem("peak-intro-seen")
+  );
+
+  const dismissIntro = () => {
+    localStorage.setItem("peak-intro-seen", "true");
+    setShowIntro(false);
+  };
 
   return (
     <main className="p-5">

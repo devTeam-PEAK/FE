@@ -8,7 +8,8 @@ import Header from "@/components/common/header";
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.musicpeak.site"),
   title: "PEAK",
-  description: "PEAK 서비스 설명",
+  description:
+    "인스타 게시물부터 스트리밍까지, 어디서 팬이 끊기는지 확인하고 바로 개선하세요.",
   openGraph: {
     type: "website",
     url: "/",

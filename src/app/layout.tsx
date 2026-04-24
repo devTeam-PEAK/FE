@@ -9,13 +9,13 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.musicpeak.site"),
   title: "PEAK",
   description:
-    "인스타 게시물부터 스트리밍까지, 어디서 팬이 끊기는지 확인하고 바로 개선하세요.",
+    "인스타 게시물부터 스트리밍까지, 어디서 팬이 끊기는지 확인하세요.",
   openGraph: {
     type: "website",
     url: "/",
     title: "신곡 홍보했는데 왜 아무도 안 듣지? 싶을 땐 PEAK",
     description:
-      "인스타 게시물부터 스트리밍까지, 어디서 팬이 끊기는지 확인하고 바로 개선하세요.",
+      "인스타 게시물부터 스트리밍까지, 어디서 팬이 끊기는지 확인하세요.",
     siteName: "PEAK",
     locale: "ko_KR",
     images: [

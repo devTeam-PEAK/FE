@@ -57,7 +57,7 @@ export default function Home() {
               내 음원 홍보 진단하기
             </Button>
           </TooltipTrigger>
-          <TooltipContent>
+          <TooltipContent side="bottom">
             <p>
               지금 팬이 왜 안 늘고 있는지,
               <br />

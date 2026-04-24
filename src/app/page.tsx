@@ -7,6 +7,8 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from "@/components/ui/tooltip";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   const [showIntro, setShowIntro] = useState(
@@ -17,6 +19,11 @@ export default function Home() {
     localStorage.setItem("peak-intro-seen", "true");
     setShowIntro(false);
   };
+  const router = useRouter();
+  useEffect(() => {
+    const done = localStorage.getItem("onboarding");
+    if (!done) router.replace("/onboarding");
+  }, [router]);
 
   return (
     <main className="p-5">

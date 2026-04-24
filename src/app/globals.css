@@ -279,3 +279,27 @@
     font-family: var(--font-base), sans-serif;
   }
 }
+
+/* embla carousel */
+.embla__viewport {
+  overflow: hidden;
+}
+
+.embla__container {
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+}
+
+.embla__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+}
+.embla__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-grey2);
+}
+.embla__dot--selected {
+  background: var(--color-main);
+}

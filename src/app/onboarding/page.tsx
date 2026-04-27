@@ -96,7 +96,7 @@ export default function OnboardingPage() {
                 <div className="flex items-start justify-center">
                   <Image
                     src="/tutorial02.png"
-                    alt=""
+                    alt="설명 이미지"
                     width={244}
                     height={244}
                     className="h-auto w-[288px] object-contain px-6 py-6 drop-shadow-[0px_4px_20px_rgba(0,0,0,0.08)]"
@@ -107,7 +107,7 @@ export default function OnboardingPage() {
                 <div className="flex items-start justify-center">
                   <Image
                     src="/tutorial03.png"
-                    alt=""
+                    alt="설명 이미지"
                     width={244}
                     height={244}
                     className="h-auto w-[288px] object-contain px-6 py-6 drop-shadow-[0px_4px_20px_rgba(0,0,0,0.08)]"
@@ -139,7 +139,6 @@ export default function OnboardingPage() {
           className="embla__next"
           onClick={handleNext}
         >
-          {/* {canNext ? "다음" : "시작하기"} */}
           다음
         </Button>
         <button

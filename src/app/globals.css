@@ -119,9 +119,9 @@
   /* Brand */
   --color-main: #6a40fc;
   --color-sub: #bdfb46;
-  --main-light1: #f4f1ff;
-  --main-light2: #d4c4ff;
-  --main-dark1: #431ad2;
+  --color-main-light1: #f4f1ff;
+  --color-main-light2: #d4c4ff;
+  --color-main-dark1: #431ad2;
 
   /* Semantic */
   --color-success: #16b44a;
@@ -142,8 +142,8 @@
   --max-width: var(--max-width);
 
   /* shadow */
-  --img-shadow: 0px 4px 20px rgba(0, 0, 0, 0.08);
-  --tooltip-shadow:
+  --shadow-img: 0px 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-tooltip:
     0px 2px 4px -2px rgba(0, 0, 0, 0.06), 0px 4px 8px -2px rgba(0, 0, 0, 0.1);
 }
 

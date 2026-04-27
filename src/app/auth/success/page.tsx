@@ -7,14 +7,23 @@ export default function AuthSuccess() {
   const router = useRouter();
 
   useEffect(() => {
-    // setTimeout(() => {
-    fetch("https://api.musicpeak.site/api/me", { credentials: "include" })
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 10_000);
+
+    fetch("https://api.musicpeak.site/api/me", {
+      credentials: "include",
+      signal: controller.signal,
+    })
       .then((res) => {
-        if (res.ok) router.replace("/");
-        else router.replace("/login");
+        router.replace(res.ok ? "/" : "/login");
       })
-      .catch(() => router.replace("/login"));
-    // }, 30000);//ui확인용
+      .catch(() => router.replace("/login"))
+      .finally(() => clearTimeout(timer));
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [router]);
 
   return (

@@ -12,7 +12,7 @@ export default function Login() {
         </div>
         <div className="flex flex-col gap-3">
           <h1 className="h1-bold">이제 시작해볼까요?</h1>
-          <p className="text-font-middle p3-regular">
+          <p className="text-font-middle p2-regular">
             음악에 더 집중할 시간을 드릴게요.
           </p>
         </div>

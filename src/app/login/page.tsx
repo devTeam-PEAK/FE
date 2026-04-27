@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
+const BASE_URL = "https://api.musicpeak.site/oauth2/authorization";
+
 export default function Login() {
   return (
     <main className="p-5">
@@ -16,25 +18,23 @@ export default function Login() {
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <Button variant="btnWhite" size="full" className="text-[#000000]">
-          <Image src={"/google.png"} alt="Google Logo" width={44} height={44} />
-          구글로 시작하기
+        <Button asChild variant="btnWhite" size="full" className="text-[#000000]">
+          <a href={`${BASE_URL}/google`}>
+            <Image src={"/google.png"} alt="Google Logo" width={44} height={44} />
+            구글로 시작하기
+          </a>
         </Button>
-        <Button
-          variant="btnWhite"
-          size="full"
-          className="border-none bg-[#FFE812] text-[#000000]"
-        >
-          <Image src={"/kakao.png"} alt="Kakao Logo" width={44} height={44} />
-          카카오로 시작하기
+        <Button asChild variant="btnWhite" size="full" className="border-none bg-[#FFE812] text-[#000000]">
+          <a href={`${BASE_URL}/kakao`}>
+            <Image src={"/kakao.png"} alt="Kakao Logo" width={44} height={44} />
+            카카오로 시작하기
+          </a>
         </Button>
-        <Button
-          variant="btnWhite"
-          size="full"
-          className="border-none bg-[#03CF5D] text-[#ffffff]"
-        >
-          <Image src={"/naver.png"} alt="Naver Logo" width={44} height={44} />
-          네이버로 시작하기
+        <Button asChild variant="btnWhite" size="full" className="border-none bg-[#03CF5D] text-[#ffffff]">
+          <a href={`${BASE_URL}/naver`}>
+            <Image src={"/naver.png"} alt="Naver Logo" width={44} height={44} />
+            네이버로 시작하기
+          </a>
         </Button>
       </div>
     </main>

@@ -10,7 +10,7 @@ export default function AuthSuccess() {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 10_000);
 
-    fetch("https://api.musicpeak.site/login", {
+    fetch("https://api.musicpeak.site/api/me", {
       credentials: "include",
       signal: controller.signal,
     })

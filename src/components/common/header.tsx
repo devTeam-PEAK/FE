@@ -1,5 +1,6 @@
 import CircleUserRound from "@/components/ui/circle-user-round";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -7,9 +8,9 @@ export default function Header() {
       <div className="h3-bold text-main">
         <Image src={"/logo.svg"} alt="Logo" width={56} height={14} />
       </div>
-      <div>
+      <Link href="/mypage">
         <CircleUserRound size={24} />
-      </div>
+      </Link>
     </div>
   );
 }

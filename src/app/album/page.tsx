@@ -9,7 +9,7 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { CalendarIcon, PlusIcon } from "lucide-react";
+import { CalendarIcon, PlusIcon, XIcon } from "lucide-react";
 import { useState } from "react";
 import { format } from "date-fns";
 
@@ -22,6 +22,10 @@ export default function AlbumPage() {
   const handleAddLink = () => {
     if (links.length >= MAX_LINK) return;
     setLinks((prev) => [...prev, ""]);
+  };
+
+  const handleRemoveLink = (idx: number) => {
+    setLinks((prev) => prev.filter((_, i) => i !== idx));
   };
 
   return (
@@ -83,18 +87,31 @@ export default function AlbumPage() {
               newLinks[idx] = e.target.value;
               setLinks(newLinks);
             }}
+            iconBtn={
+              links.length > 1 && (
+                <button
+                  className="flex items-center justify-center hover:cursor-pointer"
+                  type="button"
+                  onClick={() => handleRemoveLink(idx)}
+                >
+                  <XIcon size={16} />
+                </button>
+              )
+            }
           />
         ))}
-        <button
-          className="mb-1 flex w-fit flex-col items-center self-center hover:cursor-pointer"
-          onClick={handleAddLink}
-          disabled={links.length >= MAX_LINK}
-        >
-          <div className="bg-font-light mb-1 flex h-5 w-5 items-center justify-center rounded-full">
-            <PlusIcon className="text-grey1" size={16} />
-          </div>
-          <span className="c1-medium text-font-light">링크 추가</span>
-        </button>
+        {links.length < MAX_LINK && (
+          <button
+            className="mb-1 flex w-fit flex-col items-center self-center hover:cursor-pointer"
+            onClick={handleAddLink}
+            disabled={links.length >= MAX_LINK}
+          >
+            <div className="bg-font-light mb-1 flex h-5 w-5 items-center justify-center rounded-full">
+              <PlusIcon className="text-grey1" size={16} />
+            </div>
+            <span className="c1-medium text-font-light">링크 추가</span>
+          </button>
+        )}
         <Textarea
           label="곡에 대한 스토리 (뮤지션의 말)"
           placeholder="이 곡에 담긴 이야기를 들려주세요"

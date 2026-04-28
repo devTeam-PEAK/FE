@@ -9,7 +9,7 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 
-export default function HomeButtons() {
+export default function HomeButtons({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [showIntro, setShowIntro] = useState(false);
   const router = useRouter();
 
@@ -28,6 +28,14 @@ export default function HomeButtons() {
     setShowIntro(false);
   };
 
+  const handleCta = (path: string) => {
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
+    router.push(path);
+  };
+
   return (
     <>
       {showIntro && (
@@ -39,7 +47,7 @@ export default function HomeButtons() {
       <div className="flex flex-col gap-4">
         <Tooltip open={showIntro}>
           <TooltipTrigger asChild>
-            <Button variant="btnPurple" size="full">
+            <Button variant="btnPurple" size="full" onClick={() => handleCta("/album")}>
               신곡 홍보 링크 만들기
             </Button>
           </TooltipTrigger>
@@ -53,7 +61,7 @@ export default function HomeButtons() {
         </Tooltip>
         <Tooltip open={showIntro}>
           <TooltipTrigger asChild>
-            <Button variant="btnWhite" size="full">
+            <Button variant="btnWhite" size="full" onClick={() => handleCta("/diagnose")}>
               내 음원 홍보 진단하기
             </Button>
           </TooltipTrigger>

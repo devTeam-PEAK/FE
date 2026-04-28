@@ -1,14 +1,9 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import HomeButtons from "@/components/home/home-buttons";
 
 export default async function Home() {
   const cookieStore = await cookies();
   const isLoggedIn = cookieStore.has("refreshToken");
-
-  if (!isLoggedIn) {
-    redirect("/login");
-  }
 
   return (
     <main className="p-5">
@@ -28,7 +23,7 @@ export default async function Home() {
           </p>
         </div>
       </div>
-      <HomeButtons />
+      <HomeButtons isLoggedIn={isLoggedIn} />
     </main>
   );
 }

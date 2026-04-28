@@ -22,6 +22,7 @@ export default function AlbumDetailPage() {
           <p className="p1-bold text-font-basic">김피크</p>
           <p className="p2-medium text-font-middle">2026.01.01</p>
         </div>
+
         <div className="flex flex-col gap-2">
           <p className="p1-bold text-font-middle">음원 들으러 가기</p>
           <div className="grid grid-cols-2 gap-2">
@@ -30,6 +31,7 @@ export default function AlbumDetailPage() {
             <StreamingButton streamingCode="soundcloud" />
           </div>
         </div>
+
         <div className="flex flex-col gap-2">
           <p className="p1-bold text-font-middle">김피크의 한 마디</p>
           <Card>
@@ -44,6 +46,7 @@ export default function AlbumDetailPage() {
           </Card>
         </div>
       </section>
+
       <div className="flex flex-col items-center gap-3">
         <div className="flex flex-col items-center gap-1">
           <span className="c1-medium text-font-light">

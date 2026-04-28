@@ -108,6 +108,7 @@ export default function AlbumPage() {
         {links.length < MAX_LINK && (
           <button
             className="mb-1 flex w-fit flex-col items-center self-center hover:cursor-pointer"
+            type="button"
             onClick={handleAddLink}
             disabled={links.length >= MAX_LINK}
           >

@@ -11,7 +11,7 @@ export default function StreamingButton({ streamingCode }: Props) {
 
   return (
     <button
-      className="bg-grey1 flex h-14 w-full items-center gap-3 rounded-2xl px-4"
+      className="bg-grey1 flex h-14 w-full cursor-pointer items-center gap-3 rounded-2xl px-4"
       type="button"
     >
       <Image src={icon} alt={label} width={32} height={32} />

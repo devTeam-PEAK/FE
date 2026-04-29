@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import LoginErrorToast from "@/components/login/login-error-toast";
@@ -7,7 +8,9 @@ const BASE_URL = "https://api.musicpeak.site/oauth2/authorization";
 export default function Login() {
   return (
     <main className="p-5">
-      <LoginErrorToast />
+      <Suspense>
+        <LoginErrorToast />
+      </Suspense>
       <div className="mt-25 mb-24 flex flex-col items-center gap-8 text-center">
         <div className="bg-grey2 flex h-44 w-44 items-center justify-center rounded-full">
           <Image src={"/bamti.svg"} alt="Logo" width={128} height={128} />

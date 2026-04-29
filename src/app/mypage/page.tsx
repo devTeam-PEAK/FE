@@ -55,6 +55,23 @@ export default function MyPage() {
     router.refresh();
   };
 
+  const handleDeleteAlbum = () => {
+    openAlertModal({
+      type: "confirm",
+      message: (
+        <>
+          페이지 삭제 시{"\n"}
+          <span className="p2-semibold">
+            기존 링크를 통한 팬 반응 수집이 중지돼요.
+          </span>
+          {"\n"}
+          정말 삭제하시겠어요?
+        </>
+      ),
+      onAction: () => {},
+    });
+  };
+
   const handleWithdraw = () => {
     openAlertModal({
       type: "confirm",
@@ -95,7 +112,7 @@ export default function MyPage() {
     <main className="flex flex-1 flex-col gap-6 px-5 pt-10">
       {hasAlbums ? (
         <>
-          <AlbumCarousel albums={MOCK_ALBUMS} onSelect={handleSelect} />
+          <AlbumCarousel albums={MOCK_ALBUMS} onSelect={handleSelect} onDelete={handleDeleteAlbum} />
           <div className="flex flex-col gap-2">
             <Button
               variant="btnPurple"

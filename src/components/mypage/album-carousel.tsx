@@ -19,9 +19,10 @@ export interface AlbumData {
 interface Props {
   albums: AlbumData[];
   onSelect: (album: AlbumData) => void;
+  onDelete?: (album: AlbumData) => void;
 }
 
-export default function AlbumCarousel({ albums, onSelect }: Props) {
+export default function AlbumCarousel({ albums, onSelect, onDelete }: Props) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -62,6 +63,7 @@ export default function AlbumCarousel({ albums, onSelect }: Props) {
                   streamingCodes={album.streamingCodes}
                   message={album.message}
                   showDelete
+                  onDelete={() => onDelete?.(album)}
                 />
               </div>
             ))}

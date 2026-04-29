@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useOpenAlertModal } from "@/stores/alert-modal-store";
 import { uploadCoverImg } from "@/lib/api/uploads";
+import { getStreamingCode } from "@/utils/album";
 import { format } from "date-fns";
 
 const VALID_COVER_IMG_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -27,9 +28,12 @@ export default function AlbumPage() {
   const [coverPreview, setCoverPreview] = useState<string>("");
   const [imageUrl, setImageUrl] = useState<string>("");
 
-  // 앨범 정보 상태
+  // 앨범 정보 입력값 상태
+  const [artist, setArtist] = useState("");
+  const [albumName, setAlbumName] = useState("");
   const [date, setDate] = useState<Date | undefined>();
   const [links, setLinks] = useState<string[]>([""]);
+  const [description, setDescription] = useState("");
 
   const handleSelectImage = (file: File) => {
     if (!VALID_COVER_IMG_TYPES.includes(file.type)) {
@@ -52,6 +56,28 @@ export default function AlbumPage() {
 
   const handleRemoveLink = (idx: number) => {
     setLinks((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleBlurLink = (value: string, idx: number) => {
+    if (!value.trim()) return;
+
+    const code = getStreamingCode(value);
+
+    if (!code) {
+      openAlertModal({
+        type: "alert",
+        message:
+          "스포티파이 ∙ 애플뮤직 ∙ 멜론\n유튜브뮤직 ∙ 사운드클라우드\n링크만 입력 가능합니다.",
+      });
+
+      setLinks((prev) => {
+        const copy = [...prev];
+        copy[idx] = "";
+        return copy;
+      });
+    }
+
+    return;
   };
 
   const handleSubmit = async () => {
@@ -102,6 +128,7 @@ export default function AlbumPage() {
                   className="object-cover"
                 />
 
+                {/* 딤 + 아이콘 오버레이 */}
                 <div className="absolute inset-0 flex items-center justify-center bg-black/50">
                   <ImageIcon className="text-white" size={24} />
                 </div>
@@ -129,12 +156,16 @@ export default function AlbumPage() {
           label="뮤지션명"
           placeholder="아티스트 이름을 입력하세요"
           maxLength={50}
+          value={artist}
+          onChange={(e) => setArtist(e.target.value)}
         />
 
         <Input
           label="앨범명"
           placeholder="앨범 / 싱글명을 입력하세요"
           maxLength={50}
+          value={albumName}
+          onChange={(e) => setAlbumName(e.target.value)}
         />
 
         <Input
@@ -171,6 +202,7 @@ export default function AlbumPage() {
               newLinks[idx] = e.target.value;
               setLinks(newLinks);
             }}
+            onBlur={(e) => handleBlurLink(e.target.value, idx)}
             iconBtn={
               links.length > 1 && (
                 <button
@@ -203,6 +235,8 @@ export default function AlbumPage() {
           label="곡에 대한 스토리 (뮤지션의 말)"
           placeholder="이 곡에 담긴 이야기를 들려주세요"
           maxLength={200}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
       </section>
 

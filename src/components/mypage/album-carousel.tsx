@@ -61,6 +61,7 @@ export default function AlbumCarousel({ albums, onSelect }: Props) {
                   releaseDate={album.releaseDate}
                   streamingCodes={album.streamingCodes}
                   message={album.message}
+                  showDelete
                 />
               </div>
             ))}

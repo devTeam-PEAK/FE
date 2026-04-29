@@ -10,14 +10,40 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { CalendarIcon, PlusIcon, XIcon } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
+import { useOpenAlertModal } from "@/stores/alert-modal-store";
+import { uploadCoverImg } from "@/lib/api/uploads";
 import { format } from "date-fns";
 
+const VALID_COVER_IMG_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_LINK = 4;
 
 export default function AlbumPage() {
+  const openAlertModal = useOpenAlertModal();
+
+  // 앨범 커버 이미지 상태
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverPreview, setCoverPreview] = useState<string>("");
+  const [imageUrl, setImageUrl] = useState<string>("");
+
+  // 앨범 정보 상태
   const [date, setDate] = useState<Date | undefined>();
   const [links, setLinks] = useState<string[]>([""]);
+
+  const handleSelectImage = (file: File) => {
+    if (!VALID_COVER_IMG_TYPES.includes(file.type)) {
+      openAlertModal({
+        type: "alert",
+        message:
+          "지원하지 않는 파일 형식입니다.\nJPG, JPEG, PNG, WEBP 형식의 이미지만\n업로드할 수 있습니다.",
+      });
+      return;
+    }
+
+    setCoverFile(file);
+    setCoverPreview(URL.createObjectURL(file));
+  };
 
   const handleAddLink = () => {
     if (links.length >= MAX_LINK) return;
@@ -26,6 +52,30 @@ export default function AlbumPage() {
 
   const handleRemoveLink = (idx: number) => {
     setLinks((prev) => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleSubmit = async () => {
+    if (!coverFile) {
+      openAlertModal({
+        type: "alert",
+        message: "커버 이미지를 선택해주세요.",
+      });
+      return;
+    }
+
+    try {
+      const uploadedImageUrl = await uploadCoverImg(coverFile);
+
+      console.log("업로드 성공 URL:", uploadedImageUrl);
+      setImageUrl(uploadedImageUrl);
+    } catch (error) {
+      console.error(error);
+
+      openAlertModal({
+        type: "alert",
+        message: "이미지 업로드에 실패했습니다.",
+      });
+    }
   };
 
   return (
@@ -38,26 +88,49 @@ export default function AlbumPage() {
           입력하는 대로 미리보기 페이지에 반영돼요 👀
         </p>
       </div>
+
       <section className="mb-5 flex flex-col gap-2">
-        <div className="bg-grey1 border-border mb-1 flex h-22 w-22 items-center justify-center rounded-2xl border">
-          <button
-            className="c1-medium text-font-light flex flex-col items-center hover:cursor-pointer"
-            aria-label="앨범 커버 이미지 추가"
-          >
-            <PlusIcon size={40} />
-            <span>커버 추가</span>
-          </button>
+        <div className="bg-grey1 border-border mb-1 flex h-22 w-22 items-center justify-center overflow-hidden rounded-2xl border">
+          <label className="flex h-full w-full cursor-pointer items-center justify-center">
+            {coverPreview ? (
+              <Image
+                src={coverPreview}
+                alt="앨범 커버 이미지"
+                width={88}
+                height={88}
+                className="object-cover"
+              />
+            ) : (
+              <div className="c1-medium text-font-light flex flex-col items-center">
+                <PlusIcon size={40} />
+                <span>커버 추가</span>
+              </div>
+            )}
+
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleSelectImage(file);
+              }}
+            />
+          </label>
         </div>
+
         <Input
           label="뮤지션명"
           placeholder="아티스트 이름을 입력하세요"
           maxLength={50}
         />
+
         <Input
           label="앨범명"
           placeholder="앨범 / 싱글명을 입력하세요"
           maxLength={50}
         />
+
         <Input
           label="발매일"
           placeholder="YYYY.MM.DD"
@@ -80,6 +153,7 @@ export default function AlbumPage() {
             </Popover>
           }
         />
+
         {links.map((link, idx) => (
           <Input
             key={idx}
@@ -118,13 +192,15 @@ export default function AlbumPage() {
             <span className="c1-medium text-font-light">링크 추가</span>
           </button>
         )}
+
         <Textarea
           label="곡에 대한 스토리 (뮤지션의 말)"
           placeholder="이 곡에 담긴 이야기를 들려주세요"
           maxLength={200}
         />
       </section>
-      <Button variant="btnPurple" size="full">
+
+      <Button variant="btnPurple" size="full" onClick={handleSubmit}>
         홍보 링크 생성하기
       </Button>
     </main>

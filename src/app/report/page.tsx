@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function ComingSoon() {
+export default function Report() {
   return (
     <main className="p-5">
       <div className="mt-25 mb-24 flex flex-col items-center gap-8 text-center">

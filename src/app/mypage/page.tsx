@@ -1,11 +1,17 @@
 "use client";
-import { Button } from "@/components/ui/button";
+
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useOpenAlertModal } from "@/stores/alert-modal-store";
 
 const BASE_URL = "https://api.musicpeak.site";
 
 export default function MyPage() {
   const router = useRouter();
+  const openAlertModal = useOpenAlertModal();
+  // TODO: API 연결 시 실제 데이터로 교체
+  const hasAlbums = true;
 
   const handleLogout = async () => {
     await fetch(`${BASE_URL}/api/auth/logout`, {
@@ -15,36 +21,34 @@ export default function MyPage() {
     router.replace("/login");
   };
 
-  const handleWithdraw = async () => {
-    await fetch(`${BASE_URL}/api/me/delete`, {
-      method: "DELETE",
-      credentials: "include",
+  const handleWithdraw = () => {
+    openAlertModal({
+      type: "confirm",
+      message: "정말 탈퇴하시겠어요?\n탈퇴 후 90일간 재가입이 불가합니다.",
+      onAction: async () => {
+        await fetch(`${BASE_URL}/api/me/delete`, {
+          method: "DELETE",
+          credentials: "include",
+        });
+        router.replace("/login");
+      },
     });
-    router.replace("/login");
   };
 
   return (
-    <main className="flex flex-col gap-6 px-5 pt-10">
-      <>card component 자리</>
-      {/* 네이버검수용 프로필 나중에 지워도됨 
-      <div className="bg-grey1 flex items-center gap-4 rounded-2xl px-5 py-4">
-        <div className="bg-grey2 flex h-14 w-14 items-center justify-center rounded-full">
-          <span className="h3-bold text-font-middle">김</span>
+    <main className="flex flex-1 flex-col gap-6 px-5 pt-10">
+      {hasAlbums ? (
+        <>미리보기 컴포넌트 자리</>
+      ) : (
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+          <p className="p2-medium text-font-middle">
+            현재 만들어진 홍보 페이지가 없어요
+          </p>
+          <Button variant="btnPurple" size="full" asChild>
+            <Link href="/album">신곡 홍보 링크 만들기</Link>
+          </Button>
         </div>
-        <div className="flex flex-col gap-1">
-          <p className="p1-bold text-font-basic">김진성</p>
-          <p className="p2-regular text-font-middle">FEAK</p>
-          <p className="c1-medium text-font-light">viviammm@naver.com</p>
-        </div>
-      </div> */}
-      <div className="flex flex-col gap-2 px-6">
-        <Button variant="btnPurple" size="full">
-          🔗 링크 복사하기
-        </Button>
-        <Button variant="btnWhite" size="full">
-          수정하기
-        </Button>
-      </div>
+      )}
 
       <div className="flex items-center justify-center">
         <button

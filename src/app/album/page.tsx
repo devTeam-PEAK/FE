@@ -35,6 +35,31 @@ export default function AlbumPage() {
   const [links, setLinks] = useState<string[]>([""]);
   const [description, setDescription] = useState("");
 
+  // 유효성 검사 실패 여부 상태 ( true = validation 실패 )
+  const [errors, setErrors] = useState({
+    cover: false,
+    artist: false,
+    albumName: false,
+    date: false,
+    links: false,
+    description: false,
+  });
+
+  const validate = () => {
+    const newErrors = {
+      cover: !coverFile,
+      artist: !artist.trim(),
+      albumName: !albumName.trim(),
+      date: !date,
+      links: links.every((l) => !l.trim()),
+      description: !description.trim(),
+    };
+
+    setErrors(newErrors);
+
+    return !Object.values(newErrors).some(Boolean);
+  };
+
   const handleSelectImage = (file: File) => {
     if (!VALID_COVER_IMG_TYPES.includes(file.type)) {
       openAlertModal({
@@ -81,16 +106,10 @@ export default function AlbumPage() {
   };
 
   const handleSubmit = async () => {
-    if (!coverFile) {
-      openAlertModal({
-        type: "alert",
-        message: "커버 이미지를 선택해주세요.",
-      });
-      return;
-    }
+    validate();
 
     try {
-      const uploadedImageUrl = await uploadCoverImg(coverFile);
+      const uploadedImageUrl = await uploadCoverImg(coverFile!);
 
       console.log("업로드 성공 URL:", uploadedImageUrl);
       setImageUrl(uploadedImageUrl);
@@ -116,7 +135,11 @@ export default function AlbumPage() {
       </div>
 
       <section className="mb-5 flex flex-col gap-2">
-        <div className="bg-grey1 border-border mb-1 flex h-22 w-22 items-center justify-center overflow-hidden rounded-2xl border">
+        <div
+          className={`bg-grey1 mb-1 flex h-22 w-22 items-center justify-center overflow-hidden rounded-2xl border ${
+            errors.cover ? "border-danger" : "border-border"
+          }`}
+        >
           <label className="relative flex h-full w-full cursor-pointer items-center justify-center">
             {coverPreview ? (
               <>
@@ -153,6 +176,9 @@ export default function AlbumPage() {
         </div>
 
         <Input
+          className={
+            errors.artist ? "border-danger focus-visible:ring-danger" : ""
+          }
           label="뮤지션명"
           placeholder="아티스트 이름을 입력하세요"
           maxLength={50}
@@ -161,6 +187,9 @@ export default function AlbumPage() {
         />
 
         <Input
+          className={
+            errors.albumName ? "border-danger focus-visible:ring-danger" : ""
+          }
           label="앨범명"
           placeholder="앨범 / 싱글명을 입력하세요"
           maxLength={50}
@@ -169,6 +198,9 @@ export default function AlbumPage() {
         />
 
         <Input
+          className={
+            errors.date ? "border-danger focus-visible:ring-danger" : ""
+          }
           label="발매일"
           placeholder="YYYY.MM.DD"
           value={date ? format(date, "yyyy.MM.dd") : ""}
@@ -193,6 +225,9 @@ export default function AlbumPage() {
 
         {links.map((link, idx) => (
           <Input
+            className={
+              errors.links ? "border-danger focus-visible:ring-danger" : ""
+            }
             key={idx}
             label={idx === 0 ? "스트리밍 링크" : undefined}
             placeholder="링크를 붙여넣으세요"
@@ -232,6 +267,9 @@ export default function AlbumPage() {
         )}
 
         <Textarea
+          className={
+            errors.description ? "border-danger focus-visible:ring-danger" : ""
+          }
           label="곡에 대한 스토리 (뮤지션의 말)"
           placeholder="이 곡에 담긴 이야기를 들려주세요"
           maxLength={200}

@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
 import AlbumDetail from "@/components/album/album-detail";
+import AlbumActionButton from "@/components/album/album-action-button";
 import { getMusicPromotion } from "@/lib/api/music-promotion";
 import { getStreamingCode } from "@/utils/album";
 
@@ -44,14 +44,7 @@ export default async function AlbumDetailPage({ params }: Props) {
         <span className="p2-bold text-font-middle mb-2">
           마음에 들면 인스타그램 프로필에 바로 붙여보세요!
         </span>
-        <div className="flex gap-2">
-          <Button variant="btnPurple" size="md">
-            🔗 링크 복사
-          </Button>
-          <Button variant="btnPurpleSub" size="md">
-            수정하기
-          </Button>
-        </div>
+        <AlbumActionButton url={data.trackingUrl} />
       </div>
     </main>
   );

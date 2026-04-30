@@ -205,6 +205,7 @@ export default function AlbumPage() {
               onChange={(e) => {
                 const file = e.target.files?.[0];
                 if (file) handleSelectImage(file);
+                e.target.value = "";
               }}
             />
           </label>

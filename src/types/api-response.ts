@@ -18,3 +18,22 @@ export interface CreateMusicPromotionRes {
   trackingUrl: string;
   promotionId: number;
 }
+
+// 뮤지션 홍보 조회 Res
+export interface GetMusicPromotionRes {
+  promotionId: number;
+  trackingCode: string;
+  trackingUrl: string;
+  activityName: string;
+  songTitle: string;
+  releaseDate: string;
+  imageUrl: string;
+  shortDescription: string;
+  createdAt: string;
+  streamingLinks: {
+    streamingCode: string;
+    domain: string;
+    redirectUrl: string;
+    displayOrder: number;
+  }[];
+}

@@ -73,7 +73,7 @@ export default function HomeButtons({ isLoggedIn }: { isLoggedIn: boolean }) {
               내 음원 홍보 진단하기
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="bottom">
+          <TooltipContent side="bottom" avoidCollisions={false}>
             <p>
               지금 <strong>팬이 왜 안 늘고 있는지</strong>,
               <br />

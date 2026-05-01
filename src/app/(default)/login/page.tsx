@@ -54,7 +54,7 @@ export default function Login() {
           asChild
           variant="btnWhite"
           size="full"
-          className="border-none bg-[#03CF5D] text-[#ffffff]"
+          className="text-font-white border-none bg-[#03CF5D]"
         >
           <a href={`${BASE_URL}/naver`}>
             <Image src={"/naver.png"} alt="Naver Logo" width={30} height={30} />

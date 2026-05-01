@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import StreamingButton from "@/components/album/streaming-button";
-import { StreamingCode } from "@/types/album";
+import { StreamingItem } from "@/types/album";
 import { Trash2 } from "lucide-react";
 
 interface Props {
@@ -9,7 +9,7 @@ interface Props {
   title: string;
   artist: string;
   releaseDate: string;
-  streamingCodes: readonly StreamingCode[];
+  streamingLinks: StreamingItem[];
   message: string;
   showDelete?: boolean;
   onDelete?: () => void;
@@ -20,7 +20,7 @@ export default function AlbumDetail({
   title,
   artist,
   releaseDate,
-  streamingCodes,
+  streamingLinks,
   message,
   showDelete = false,
   onDelete,
@@ -46,8 +46,12 @@ export default function AlbumDetail({
       <div className="flex flex-col gap-2">
         <p className="p1-bold text-font-middle">음원 들으러 가기</p>
         <div className="grid grid-cols-2 gap-2">
-          {streamingCodes.map((code) => (
-            <StreamingButton key={code} streamingCode={code} />
+          {streamingLinks.map((item) => (
+            <StreamingButton
+              key={item.url}
+              streamingCode={item.code}
+              url={item.url}
+            />
           ))}
         </div>
       </div>

@@ -7,6 +7,8 @@ interface Props extends React.ComponentProps<"textarea"> {
 }
 
 export function Textarea({ label, className, maxLength, ...props }: Props) {
+  const valueLength = typeof props.value === "string" ? props.value.length : 0;
+
   return (
     <div
       className={cn(
@@ -28,7 +30,9 @@ export function Textarea({ label, className, maxLength, ...props }: Props) {
       />
 
       <div className="flex justify-end">
-        <span className="c1-medium text-font-light">0 / {maxLength}</span>
+        <span className="c1-medium text-font-light">
+          {valueLength} / {maxLength}
+        </span>
       </div>
     </div>
   );

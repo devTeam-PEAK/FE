@@ -7,43 +7,66 @@ import Link from "next/link";
 import { useOpenAlertModal } from "@/stores/alert-modal-store";
 import { toast } from "sonner";
 import AlbumCarousel, { AlbumData } from "@/components/mypage/album-carousel";
+import {
+  getMyPagePromotions,
+  getMusicPromotion,
+  deleteMusicPromotion,
+} from "@/lib/api/music-promotion";
+import { getStreamingCode } from "@/utils/album";
+import { Spinner } from "@/components/ui/spinner";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import ErrorView from "@/components/common/error-view";
 
 const BASE_URL = "https://api.musicpeak.site";
 
-// TODO: API 연결 시 교체
-const MOCK_ALBUMS: AlbumData[] = [
-  {
-    id: "1",
-    coverUrl: "/test-cover.png",
-    title: "피크와 함께라면",
-    artist: "김피크",
-    releaseDate: "2026.01.01",
-    streamingCodes: ["spotify", "youtube", "soundcloud"],
-    message:
-      "난 지금 미쳐가고 있다.\n이 헤드폰에 내 모든 몸과 영혼을 맡겼다.\n음악만이 나라에서 허락하는 유일한 마약이니까.\n이게 바로 지금의 나다.",
-    link: "https://www.musicpeak.site/album/1",
-  },
-  {
-    id: "2",
-    coverUrl: "/test-cover.png",
-    title: "피크와 함께라면",
-    artist: "김피크",
-    releaseDate: "2026.01.01",
-    streamingCodes: ["spotify", "youtube", "soundcloud"],
-    message:
-      "난 지금 미쳐가고 있다.\n이 헤드폰에 내 모든 몸과 영혼을 맡겼다.\n음악만이 나라에서 허락하는 유일한 마약이니까.\n이게 바로 지금의 나다.",
-    link: "https://www.musicpeak.site/album/2",
-  },
-];
+async function fetchAlbums(): Promise<AlbumData[]> {
+  const { promotions } = await getMyPagePromotions();
+  const details = await Promise.all(
+    [...promotions]
+      .sort((a, b) => b.promotionId - a.promotionId)
+      .map((p) => getMusicPromotion(p.promotionId))
+  );
+
+  return details.map((data) => ({
+    id: String(data.promotionId),
+    coverUrl: data.imageUrl,
+    title: data.songTitle,
+    artist: data.activityName,
+    releaseDate: data.releaseDate,
+    message: data.shortDescription,
+    streamingLinks: data.streamingLinks
+      .sort((a, b) => a.displayOrder - b.displayOrder)
+      .map((link) => {
+        const code = getStreamingCode(`https://${link.domain}`);
+        if (!code) return null;
+        return { code, url: link.redirectUrl };
+      })
+      .filter((v): v is NonNullable<typeof v> => v !== null),
+    link: data.trackingUrl,
+  }));
+}
 
 export default function MyPage() {
   const router = useRouter();
   const openAlertModal = useOpenAlertModal();
-  const [selectedAlbum, setSelectedAlbum] = useState<AlbumData>(MOCK_ALBUMS[0]);
-  const hasAlbums = MOCK_ALBUMS.length > 0;
+  const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(null);
+
+  const queryClient = useQueryClient();
+  const {
+    data: albums = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery<AlbumData[]>({
+    queryKey: ["myPageAlbums"],
+    queryFn: fetchAlbums,
+  });
+
+  const selectedAlbum =
+    albums.find((a) => a.id === selectedAlbumId) ?? albums[0] ?? null;
 
   const handleSelect = useCallback((album: AlbumData) => {
-    setSelectedAlbum(album);
+    setSelectedAlbumId(album.id);
   }, []);
 
   const handleLogout = async () => {
@@ -55,7 +78,7 @@ export default function MyPage() {
     router.refresh();
   };
 
-  const handleDeleteAlbum = () => {
+  const handleDeleteAlbum = (album: AlbumData) => {
     openAlertModal({
       type: "confirm",
       message: (
@@ -68,7 +91,17 @@ export default function MyPage() {
           정말 삭제하시겠어요?
         </>
       ),
-      onAction: () => {},
+      onAction: async () => {
+        try {
+          await deleteMusicPromotion(Number(album.id));
+          queryClient.setQueryData<AlbumData[]>(["myPageAlbums"], (prev = []) =>
+            prev.filter((a) => a.id !== album.id)
+          );
+          setSelectedAlbumId(null);
+        } catch {
+          toast.error("삭제에 실패했어요. 잠시 후 다시 시도해 주세요.");
+        }
+      },
     });
   };
 
@@ -111,10 +144,26 @@ export default function MyPage() {
 
   return (
     <main className="flex flex-1 flex-col gap-6 px-5 pt-10">
-      {hasAlbums ? (
+      {isLoading ? (
+        <div className="flex flex-1 items-center justify-center">
+          <Spinner className="text-main" />
+        </div>
+      ) : isError ? (
+        <>
+          <ErrorView
+            title={`죄송합니다\n데이터를 불러오지 못했어요.`}
+            description={`연결이 잠시 불안정해요.\n다시 시도해 주세요.`}
+          />
+          <div className="fixed right-0 bottom-30 left-0 mx-auto max-w-(--max-width) px-11">
+            <Button variant="btnPurple" size="full" onClick={() => refetch()}>
+              다시 시도
+            </Button>
+          </div>
+        </>
+      ) : albums.length > 0 ? (
         <>
           <AlbumCarousel
-            albums={MOCK_ALBUMS}
+            albums={albums}
             onSelect={handleSelect}
             onDelete={handleDeleteAlbum}
           />
@@ -122,14 +171,19 @@ export default function MyPage() {
             <Button
               variant="btnPurple"
               size="full"
-              onClick={() => navigator.clipboard.writeText(selectedAlbum.link)}
+              onClick={() =>
+                selectedAlbum &&
+                navigator.clipboard.writeText(selectedAlbum.link)
+              }
             >
               🔗 링크 복사
             </Button>
             <Button
               variant="btnWhite"
               size="full"
-              onClick={() => router.push(`/album/${selectedAlbum.id}`)}
+              onClick={() =>
+                selectedAlbum && router.push(`/album?edit=${selectedAlbum.id}`)
+              }
             >
               수정하기
             </Button>
@@ -146,23 +200,25 @@ export default function MyPage() {
         </div>
       )}
 
-      <div className="flex items-center justify-center">
-        <button
-          className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
-          onClick={handleWithdraw}
-        >
-          회원탈퇴
-        </button>
-        <div className="flex h-6 w-6 items-center justify-center">
-          <span className="bg-border h-4 w-px"></span>
+      {!isError && (
+        <div className="flex items-center justify-center">
+          <button
+            className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
+            onClick={handleWithdraw}
+          >
+            회원탈퇴
+          </button>
+          <div className="flex h-6 w-6 items-center justify-center">
+            <span className="bg-border h-4 w-px"></span>
+          </div>
+          <button
+            className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
+            onClick={handleLogout}
+          >
+            로그아웃
+          </button>
         </div>
-        <button
-          className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
-          onClick={handleLogout}
-        >
-          로그아웃
-        </button>
-      </div>
+      )}
     </main>
   );
 }

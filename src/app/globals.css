@@ -321,3 +321,9 @@
 .embla__dot--selected {
   background: var(--color-main);
 }
+
+/* textarea scrollbar */
+textarea {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}

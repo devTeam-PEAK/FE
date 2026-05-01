@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import AlbumDetail from "@/components/album/album-detail";
-import { StreamingCode } from "@/types/album";
+import { StreamingItem } from "@/types/album";
 
 export interface AlbumData {
   id: string;
@@ -11,7 +11,7 @@ export interface AlbumData {
   title: string;
   artist: string;
   releaseDate: string;
-  streamingCodes: readonly StreamingCode[];
+  streamingLinks: StreamingItem[];
   message: string;
   link: string;
 }
@@ -60,7 +60,7 @@ export default function AlbumCarousel({ albums, onSelect, onDelete }: Props) {
                   title={album.title}
                   artist={album.artist}
                   releaseDate={album.releaseDate}
-                  streamingCodes={album.streamingCodes}
+                  streamingLinks={album.streamingLinks}
                   message={album.message}
                   showDelete
                   onDelete={() => onDelete?.(album)}

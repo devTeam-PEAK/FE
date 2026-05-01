@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import AlertModal from "@/components/common/alert-modal";
 import Header from "@/components/common/header";
 import ToastProvider from "@/components/ui/toast-provider";
+import QueryProvider from "@/components/common/query-provider";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.musicpeak.site"),
@@ -83,7 +84,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <div className="mx-auto flex min-h-screen w-full max-w-(--max-width) flex-col bg-white px-5 pb-9 shadow-2xl">
           <Header />
           <div className="flex flex-1 flex-col">
-            <TooltipProvider>{children}</TooltipProvider>
+            <QueryProvider>
+              <TooltipProvider>{children}</TooltipProvider>
+            </QueryProvider>
           </div>
           <AlertModal />
           <ToastProvider />

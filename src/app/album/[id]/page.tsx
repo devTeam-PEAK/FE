@@ -1,36 +1,50 @@
-import { Button } from "@/components/ui/button";
 import AlbumDetail from "@/components/album/album-detail";
+import AlbumActionButton from "@/components/album/album-action-button";
+import { getMusicPromotion } from "@/lib/api/music-promotion";
+import { getStreamingCode } from "@/utils/album";
 
-const MOCK_ALBUM = {
-  coverUrl: "/test-cover.png",
-  title: "피크와 함께라면",
-  artist: "김피크",
-  releaseDate: "2026.01.01",
-  streamingCodes: ["spotify", "youtube", "soundcloud"] as const,
-  message:
-    "난 지금 미쳐가고 있다.\n이 헤드폰에 내 모든 몸과 영혼을 맡겼다.\n음악만이 나라에서 허락하는 유일한 마약이니까.\n이게 바로 지금의 나다.",
-};
+interface Props {
+  params: Promise<{ id: string }>;
+}
 
-export default function AlbumDetailPage() {
+export default async function AlbumDetailPage({ params }: Props) {
+  const { id } = await params;
+  const promotionId = Number(id);
+
+  const data = await getMusicPromotion(promotionId);
+
+  const albumInfo = {
+    coverUrl: data.imageUrl,
+    title: data.songTitle,
+    artist: data.activityName,
+    releaseDate: data.releaseDate,
+    message: data.shortDescription,
+    streamingLinks: data.streamingLinks
+      .sort((a, b) => a.displayOrder - b.displayOrder)
+      .map((link) => {
+        const code = getStreamingCode(`https://${link.domain}`);
+        if (!code) return null;
+
+        return {
+          code,
+          url: link.redirectUrl,
+        };
+      })
+      .filter((v): v is NonNullable<typeof v> => v !== null),
+  };
+
   return (
-    <main className="my-7 flex flex-col justify-center gap-10">
-      <AlbumDetail {...MOCK_ALBUM} />
+    <main className="mt-4 flex flex-col justify-center gap-10">
+      <AlbumDetail {...albumInfo} />
 
-      <div className="flex flex-col items-center gap-3">
-        <div className="flex flex-col items-center gap-1">
-          <span className="c1-medium text-font-light">
-            팬들이 링크를 눌렀을 때 이렇게 보여요.
-          </span>
-          <span className="p2-bold text-font-middle">
-            마음에 들면 인스타그램 프로필에 바로 붙여보세요!
-          </span>
-        </div>
-        <Button variant="btnPurple" size="md">
-          🔗 링크 복사
-        </Button>
-        <Button variant="btnPurpleSub" size="md">
-          수정하기
-        </Button>
+      <div className="flex flex-col items-center gap-1">
+        <span className="c1-medium text-font-light">
+          팬들이 링크를 눌렀을 때 이렇게 보여요.
+        </span>
+        <span className="p2-bold text-font-middle mb-2">
+          마음에 들면 인스타그램 프로필에 바로 붙여보세요!
+        </span>
+        <AlbumActionButton url={data.trackingUrl} />
       </div>
     </main>
   );

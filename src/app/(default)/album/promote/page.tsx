@@ -47,7 +47,7 @@ export default function Promote() {
 
         <div className="bg-grey1 flex flex-col gap-4 rounded-2xl px-8 pt-5">
           <Image
-            src="/promote/ex-insta.png"
+            src="/ex-insta.png"
             alt="인스타그램 프로필 예시"
             width={572}
             height={380}

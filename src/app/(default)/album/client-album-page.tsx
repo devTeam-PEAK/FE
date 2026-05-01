@@ -9,13 +9,18 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
 import { PlusIcon, ImageIcon, CalendarIcon, XIcon } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import { useOpenAlertModal } from "@/stores/alert-modal-store";
 import { uploadCoverImg } from "@/lib/api/uploads";
-import { createMusicPromotion } from "@/lib/api/music-promotion";
+import {
+  createMusicPromotion,
+  getMusicPromotion,
+  updateMusicPromotion,
+} from "@/lib/api/music-promotion";
 import { getStreamingCode } from "@/utils/album";
 import { format } from "date-fns";
 
@@ -26,6 +31,11 @@ export default function AlbumPage() {
   const router = useRouter();
   const openAlertModal = useOpenAlertModal();
 
+  // 수정 모드 여부 판단
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
+  const isEditMode = !!editId;
+
   // 앨범 커버 이미지 상태
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string>("");
@@ -35,6 +45,9 @@ export default function AlbumPage() {
   const [albumName, setAlbumName] = useState("");
   const [date, setDate] = useState<Date | undefined>();
   const [links, setLinks] = useState<string[]>([""]);
+  const [originalLinks, setOriginalLinks] = useState<
+    { url: string; clickUrl: string }[]
+  >([]);
   const [description, setDescription] = useState("");
 
   // 유효성 검사 실패 여부 상태 ( true = validation 실패 )
@@ -47,9 +60,10 @@ export default function AlbumPage() {
     description: false,
   });
 
+  // 유효성 검사
   const validate = () => {
     const newErrors = {
-      cover: !coverFile,
+      cover: !(coverFile || coverPreview),
       artist: !artist.trim(),
       albumName: !albumName.trim(),
       date: !date,
@@ -61,6 +75,36 @@ export default function AlbumPage() {
 
     return !Object.values(newErrors).some(Boolean);
   };
+
+  useEffect(() => {
+    if (!editId) return;
+
+    const fetchData = async () => {
+      const data = await getMusicPromotion(Number(editId));
+
+      setArtist(data.activityName);
+      setAlbumName(data.songTitle);
+      setDate(new Date(data.releaseDate));
+      setDescription(data.shortDescription);
+      setCoverPreview(data.imageUrl);
+
+      const sortedLinks = data.streamingLinks.sort(
+        (a, b) => a.displayOrder - b.displayOrder
+      );
+
+      setLinks(sortedLinks.map((link) => link.url));
+
+      // 원본 링크 저장 ( 기존 링크와 같은 링크는 redirectUrl을 포함시키기 위함 )
+      setOriginalLinks(
+        sortedLinks.map((link) => ({
+          url: link.url,
+          clickUrl: link.clickUrl,
+        }))
+      );
+    };
+
+    fetchData();
+  }, [editId]);
 
   const handleSelectImage = (file: File) => {
     if (!VALID_COVER_IMG_TYPES.includes(file.type)) {
@@ -125,8 +169,12 @@ export default function AlbumPage() {
     if (!isValid) return;
 
     try {
-      // 1. 이미지 업로드
-      const imageUrl = await uploadCoverImg(coverFile!);
+      // 1. 새 이미지를 선택했을 때 이미지 업로드
+      let imageUrl = coverPreview;
+
+      if (coverFile) {
+        imageUrl = await uploadCoverImg(coverFile);
+      }
 
       // 2. payload 생성
       const payload = {
@@ -135,26 +183,44 @@ export default function AlbumPage() {
         releaseDate: format(date!, "yyyy-MM-dd"),
         streamingLinks: links
           .filter((link) => link.trim() !== "")
-          .map((link) => ({
-            streamingCode: getStreamingCode(link)!,
-            url: link,
-          })),
+          .map((link) => {
+            // 기존 링크인지 검사
+            const oLink = originalLinks.find((origin) => origin.url === link);
+
+            if (oLink) {
+              // 기존 링크 → redirectUrl 포함
+              return {
+                url: link,
+                redirectUrl: oLink.clickUrl,
+              };
+            }
+
+            // 신규 링크 → url만
+            return {
+              url: link,
+            };
+          }),
         imageUrl: imageUrl,
         shortDescription: description,
       };
 
-      // 3. 뮤지션 홍보 생성 API 호출
-      const { promotionId } = await createMusicPromotion(payload);
-
-      // 4. 앨범 조회 페이지 이동
-      router.push(`/album/${promotionId}`);
+      if (isEditMode) {
+        // 3. 뮤지션 홍보 수정 API 호출
+        await updateMusicPromotion(Number(editId), payload);
+        toast.success("수정이 완료되었습니다!", { position: "bottom-center" });
+        router.push(`/album/${editId}`);
+      } else {
+        // 3. 뮤지션 홍보 생성 API 호출
+        const { promotionId } = await createMusicPromotion(payload);
+        router.push(`/album/${promotionId}`);
+      }
     } catch (error) {
       console.error(error);
 
-      openAlertModal({
-        type: "alert",
-        message: "뮤지션 홍보 생성에 실패했습니다.",
-      });
+      toast.error(
+        isEditMode ? "수정에 실패했습니다." : "홍보 링크 생성에 실패했습니다.",
+        { position: "bottom-center" }
+      );
     }
   };
 
@@ -315,7 +381,7 @@ export default function AlbumPage() {
       </section>
 
       <Button variant="btnPurple" size="full" onClick={handleSubmit}>
-        홍보 링크 생성하기
+        {isEditMode ? "수정 완료" : "홍보 링크 생성하기"}
       </Button>
     </main>
   );

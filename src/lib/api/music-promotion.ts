@@ -79,3 +79,21 @@ export async function getMusicPromotion(
     throw e;
   }
 }
+
+/**
+ * 뮤지션 홍보 수정
+ * [PUT] /music-promotions/{promotionId}
+ */
+export async function updateMusicPromotion(
+  promotionId: number,
+  payload: MusicPromotionInfo
+): Promise<void> {
+  try {
+    await fetcher(`/music-promotions/${promotionId}`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+  } catch {
+    throw new Error("[music-promotion]: 뮤지션 홍보 수정 실패");
+  }
+}

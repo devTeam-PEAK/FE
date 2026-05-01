@@ -82,7 +82,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           />
         </noscript>
         <div className="mx-auto flex min-h-screen w-full max-w-(--max-width) flex-col bg-white px-5 pb-9 shadow-2xl">
-          <Header />
           <div className="flex flex-1 flex-col">
             <QueryProvider>
               <TooltipProvider>{children}</TooltipProvider>

@@ -3,8 +3,8 @@ export interface MusicPromotionInfo {
   songTitle: string;
   releaseDate: string;
   streamingLinks: {
-    streamingCode: StreamingCode;
     url: string;
+    redirectUrl?: string;
   }[];
   imageUrl: string;
   shortDescription: string;

@@ -19,6 +19,25 @@ export interface CreateMusicPromotionRes {
   promotionId: number;
 }
 
+// 마이페이지 프로모션 목록 조회 Res
+export interface MyPagePromotion {
+  promotionId: number;
+  title: string;
+  coverImageUrl: string;
+  shareCount: number;
+  profileVisitCount: number;
+  linkClickCount: number;
+}
+
+export interface GetMyPagePromotionsRes {
+  promotions: MyPagePromotion[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
 // 뮤지션 홍보 조회 Res
 export interface GetMusicPromotionRes {
   promotionId: number;

@@ -150,7 +150,10 @@ export default function MyPage() {
         </div>
       ) : isError ? (
         <>
-          <ErrorView title="데이터를 불러오지 못했어요." />
+          <ErrorView
+            title="데이터를 불러오지 못했어요."
+            description={`연결이 잠시 불안정해요.\n다시 시도해 주세요.`}
+          />
           <div className="fixed right-0 bottom-30 left-0 mx-auto max-w-(--max-width) px-11">
             <Button variant="btnPurple" size="full" onClick={() => refetch()}>
               다시 시도
@@ -197,23 +200,25 @@ export default function MyPage() {
         </div>
       )}
 
-      <div className="flex items-center justify-center">
-        <button
-          className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
-          onClick={handleWithdraw}
-        >
-          회원탈퇴
-        </button>
-        <div className="flex h-6 w-6 items-center justify-center">
-          <span className="bg-border h-4 w-px"></span>
+      {!isError && (
+        <div className="flex items-center justify-center">
+          <button
+            className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
+            onClick={handleWithdraw}
+          >
+            회원탈퇴
+          </button>
+          <div className="flex h-6 w-6 items-center justify-center">
+            <span className="bg-border h-4 w-px"></span>
+          </div>
+          <button
+            className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
+            onClick={handleLogout}
+          >
+            로그아웃
+          </button>
         </div>
-        <button
-          className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
-          onClick={handleLogout}
-        >
-          로그아웃
-        </button>
-      </div>
+      )}
     </main>
   );
 }

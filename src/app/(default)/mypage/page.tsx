@@ -155,14 +155,11 @@ export default function MyPage() {
       ) : isError ? (
         <>
           <ErrorView
-            title={`죄송합니다\n데이터를 불러오지 못했어요.`}
-            description={`연결이 잠시 불안정해요.\n다시 시도해 주세요.`}
+            title={`요청하신 화면을\n불러오지 못했어요`}
+            description={`페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요.`}
+            onAction={refetch}
+            actionLabel="다시 시도하기"
           />
-          <div className="fixed right-0 bottom-30 left-0 mx-auto max-w-(--max-width) px-11">
-            <Button variant="btnPurple" size="full" onClick={() => refetch()}>
-              다시 시도
-            </Button>
-          </div>
         </>
       ) : albums.length > 0 ? (
         <>

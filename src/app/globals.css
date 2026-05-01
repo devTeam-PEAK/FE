@@ -157,10 +157,10 @@
   --radius-r3: 20px;
 
   /* Weight */
-  --weight-b: 700;
-  --weight-m: 500;
-  --weight-r: 400;
-  --weight-sb: 600;
+  --font-weight-b: 700;
+  --font-weight-m: 500;
+  --font-weight-r: 400;
+  --font-weight-sb: 600;
 }
 
 /* Typography */

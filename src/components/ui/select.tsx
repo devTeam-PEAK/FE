@@ -4,7 +4,7 @@ import * as React from "react";
 import { Select as SelectPrimitive } from "radix-ui";
 
 import { cn } from "@/lib/utils";
-import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
+import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 function Select({
   ...props
@@ -28,7 +28,13 @@ function SelectGroup({
 function SelectValue({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
-  return <SelectPrimitive.Value data-slot="select-value" {...props} />;
+  return (
+    <SelectPrimitive.Value
+      data-slot="select-value"
+      className="text-sm"
+      {...props}
+    />
+  );
 }
 
 function SelectTrigger({
@@ -45,7 +51,7 @@ function SelectTrigger({
       data-size={size}
       className={cn(
         "relative flex h-10 w-full items-center justify-between rounded-lg border px-4 py-2",
-        "border-border text-font-basic text-p2 bg-transparent outline-none focus:ring-0",
+        "border-border text-font-basic bg-allwhite text-sm outline-none focus:ring-0",
         "data-placeholder:text-font-light",
         className
       )}
@@ -72,8 +78,8 @@ function SelectContent({
         data-slot="select-content"
         data-align-trigger={position === "item-aligned"}
         className={cn(
-          "z-50 w-full",
-          "border-border text-font-basic text-p2 bg-allwhite rounded-r1 border outline-none",
+          "border-border text-font-basic bg-white z-50 w-full",
+          "rounded-r1 overflow-hidden border text-sm outline-none",
           position === "popper" &&
             "data-[side=bottom]:translate-y-1 data-[side=left]:-translate-x-1 data-[side=right]:translate-x-1 data-[side=top]:-translate-y-1",
           className
@@ -121,7 +127,7 @@ function SelectItem({
       data-slot="select-item"
       className={cn(
         // "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground relative flex w-full cursor-default items-center gap-3 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
-        "bg-allwhite rounded-r1 text-p2 px-3 py-1.5 text-(--color-font-light) outline-none",
+        "bg-allwhite rounded-r1 px-3 py-1.5 text-sm text-(--color-font-light) outline-none",
         "focus:bg-grey1 data-[state=open]:bg-grey1 focus:text-(--color-font-basic)",
         className
       )}

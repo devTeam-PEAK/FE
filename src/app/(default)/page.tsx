@@ -5,7 +5,6 @@ import Image from "next/image";
 export default async function Home() {
   const cookieStore = await cookies();
 
-  const isLoggedIn = cookieStore.has("refreshToken");
   const showIntro = !cookieStore.has("peak-intro-seen");
 
   return (
@@ -28,7 +27,7 @@ export default async function Home() {
           </p>
         </div>
       </div>
-      <HomeButtons isLoggedIn={isLoggedIn} showIntro={showIntro} />
+      <HomeButtons showIntro={showIntro} />
     </main>
   );
 }

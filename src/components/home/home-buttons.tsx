@@ -9,27 +9,13 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 
-export default function HomeButtons({
-  isLoggedIn,
-  showIntro,
-}: {
-  isLoggedIn: boolean;
-  showIntro: boolean;
-}) {
+export default function HomeButtons({ showIntro }: { showIntro: boolean }) {
   const [showIntroState, setShowIntroState] = useState(showIntro);
   const router = useRouter();
 
   const dismissIntro = () => {
     document.cookie = "peak-intro-seen=true; path=/; max-age=31536000";
     setShowIntroState(false);
-  };
-
-  const handleCta = (path: string) => {
-    if (!isLoggedIn) {
-      router.push("/login");
-      return;
-    }
-    router.push(path);
   };
 
   return (
@@ -46,7 +32,7 @@ export default function HomeButtons({
             <Button
               variant="btnPurple"
               size="full"
-              onClick={() => handleCta("/album")}
+              onClick={() => router.push("/album")}
             >
               신곡 홍보 링크 만들기
             </Button>
@@ -64,7 +50,7 @@ export default function HomeButtons({
             <Button
               variant="btnWhite"
               size="full"
-              onClick={() => handleCta("/report")}
+              onClick={() => router.push("/report")}
             >
               내 음원 홍보 진단하기
             </Button>

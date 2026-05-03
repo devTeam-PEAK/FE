@@ -12,7 +12,7 @@ export function getAccessToken() {
 
 async function refreshAccessToken(): Promise<boolean> {
   try {
-    const res = await fetch(`${BASE_URL}/api/auth/token`, {
+    const res = await fetch(`${BASE_URL}/auth/token`, {
       method: "POST",
       credentials: "include",
     });

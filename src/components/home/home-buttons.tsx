@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,23 +9,19 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 
-export default function HomeButtons({ isLoggedIn }: { isLoggedIn: boolean }) {
-  const [showIntro, setShowIntro] = useState(false);
+export default function HomeButtons({
+  isLoggedIn,
+  showIntro,
+}: {
+  isLoggedIn: boolean;
+  showIntro: boolean;
+}) {
+  const [showIntroState, setShowIntroState] = useState(showIntro);
   const router = useRouter();
 
-  useEffect(() => {
-    if (!localStorage.getItem("onboarding")) {
-      router.replace("/onboarding");
-      return;
-    }
-    if (!localStorage.getItem("peak-intro-seen")) {
-      setShowIntro(true);
-    }
-  }, [router]);
-
   const dismissIntro = () => {
-    localStorage.setItem("peak-intro-seen", "true");
-    setShowIntro(false);
+    document.cookie = "peak-intro-seen=true; path=/; max-age=31536000";
+    setShowIntroState(false);
   };
 
   const handleCta = (path: string) => {
@@ -38,14 +34,14 @@ export default function HomeButtons({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <>
-      {showIntro && (
+      {showIntroState && (
         <div
           className="fixed inset-0 z-1000 bg-black/50"
           onClick={dismissIntro}
         />
       )}
       <div className="flex flex-col gap-4">
-        <Tooltip open={showIntro}>
+        <Tooltip open={showIntroState}>
           <TooltipTrigger asChild>
             <Button
               variant="btnPurple"
@@ -63,7 +59,7 @@ export default function HomeButtons({ isLoggedIn }: { isLoggedIn: boolean }) {
             </p>
           </TooltipContent>
         </Tooltip>
-        <Tooltip open={showIntro}>
+        <Tooltip open={showIntroState}>
           <TooltipTrigger asChild>
             <Button
               variant="btnWhite"

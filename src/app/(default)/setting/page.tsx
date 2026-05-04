@@ -1,10 +1,18 @@
 "use client";
 
 import { toast } from "sonner";
-import { ChevronLeftIcon } from "lucide-react";
+import { ChevronLeftIcon, ExternalLinkIcon } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useOpenAlertModal } from "@/stores/alert-modal-store";
 import { logout, withdraw } from "@/lib/api/auth";
+
+const EXTERNAL_LINKS = {
+  TERMS:
+    "https://www.notion.so/goormkdx/PEAK-34bc0ff4ce318055b56de402af767268?source=copy_link",
+  PRIVACY:
+    "https://www.notion.so/goormkdx/PEAK-356c0ff4ce31806dbf70c98b5942486c?source=copy_link",
+};
 
 export default function SettingPage() {
   const router = useRouter();
@@ -54,7 +62,7 @@ export default function SettingPage() {
   return (
     <div className="flex flex-col gap-6">
       <header className="text-font-middle relative flex items-center">
-        <button>
+        <button className="cursor-pointer" onClick={() => router.back()}>
           <ChevronLeftIcon size={32} />
         </button>
         <h3 className="h3-bold absolute left-1/2 -translate-x-1/2">설정</h3>
@@ -94,13 +102,25 @@ export default function SettingPage() {
             <span className="text-font-light">csmusicpeak@gmail.com</span>
           </div>
 
-          <button className="flex w-full cursor-pointer items-center justify-between py-2">
+          <Link
+            href={EXTERNAL_LINKS.TERMS}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full cursor-pointer items-center justify-between py-2"
+          >
             <span>이용약관</span>
-          </button>
+            <ExternalLinkIcon size={16} className="text-font-light" />
+          </Link>
 
-          <button className="flex w-full cursor-pointer items-center justify-between py-2">
+          <Link
+            href={EXTERNAL_LINKS.PRIVACY}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex w-full cursor-pointer items-center justify-between py-2"
+          >
             <span>개인정보처리방침</span>
-          </button>
+            <ExternalLinkIcon size={16} className="text-font-light" />
+          </Link>
         </div>
       </section>
 

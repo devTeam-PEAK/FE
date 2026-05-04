@@ -1,7 +1,6 @@
 "use client";
 
 // import ComingSoon from "@/components/report/coming-soon";
-
 import { Input } from "@/components/common/input";
 import {
   Select,
@@ -13,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
-import Image from "next/image";
 import Link from "next/link";
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
@@ -39,7 +37,7 @@ export default function Report() {
       </div>
 
       <div className="flex flex-col gap-20">
-        <button className="text-font-middle bg-allwhite rounded-r2 shadow-btn flex h-15 cursor-pointer items-center gap-4 p-3">
+        {/* <button className="text-font-middle bg-allwhite rounded-r2 shadow-btn flex h-15 cursor-pointer items-center gap-4 p-3">
           <Image src="/insta.svg" alt="인스타그램" width={24} height={24} />
           <div className="flex flex-col items-start">
             <h6 className="p2-bold">인스타그램 계정 연동하기</h6>
@@ -47,7 +45,7 @@ export default function Report() {
               프로페셔널 계정만 연동 가능해요
             </p>
           </div>
-        </button>
+        </button> */}
         {/* <button className="text-font-middle bg-allwhite rounded-r2 shadow-btn flex h-15 items-center gap-4 p-3">
           <Image
             src="/peak-round-sm.svg"
@@ -91,6 +89,23 @@ export default function Report() {
             >
               새 홍보 링크 만들기
             </Link>
+          </div>
+        </section>
+
+        <section className="flex flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <h5 className="p1-bold text-font-middle">계정을 입력해주세요</h5>
+            <p className="p2-medium text-font-light">
+              홍보 중이신 인스타그램 계정을 입력해주세요
+            </p>
+            <Input
+              // className={
+              //   errors.artist ? "border-danger focus-visible:ring-danger" : ""
+              // }
+              label="인스타그램 계정"
+              placeholder="인스타그램 계정을 입력해주세요"
+              maxLength={50}
+            />
           </div>
         </section>
 
@@ -149,10 +164,9 @@ export default function Report() {
           />
         </section>
         {/* <Button variant="btnPurple" size="full" disabled={!date}>
-          진단 시작하기
-        </Button> */}
+         */}
         <Button variant="btnPurple" size="full">
-          진단 시작하기
+          <Link href="/report/complete">분석시작하기</Link>
         </Button>
       </div>
       {/* <ComingSoon /> */}

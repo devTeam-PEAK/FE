@@ -172,8 +172,9 @@ export default function Report() {
           >
             <SelectTrigger
               className={errors.promotionId ? "border-danger" : ""}
+              disabled={promotions.length === 0}
             >
-              <SelectValue placeholder="앨범 선택하기" />
+              <SelectValue placeholder={promotions.length === 0 ? "생성된 홍보 링크가 없어요" : "앨범 선택하기"} />
             </SelectTrigger>
             <SelectContent position="popper">
               <SelectGroup>

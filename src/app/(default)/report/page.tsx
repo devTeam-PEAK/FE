@@ -53,8 +53,10 @@ export default function Report() {
     const val = e.target.value;
     const next = val.startsWith("@") ? val : "@" + val.replace(/^@*/, "");
     setInstagram(next);
-    if (isValidInstagram(next)) {
+    if (next === "@") {
       setErrors((prev) => ({ ...prev, instagram: false }));
+    } else {
+      setErrors((prev) => ({ ...prev, instagram: !isValidInstagram(next) }));
     }
   };
 
@@ -104,8 +106,8 @@ export default function Report() {
   if (isPromotionsError) {
     return (
       <ErrorView
-        title={`앨범 목록을\n불러오지 못했어요`}
-        description={`잠시 후 다시 시도해주세요.`}
+        title={`요청하신 화면을\n불러오지 못했어요`}
+        description={`페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요.`}
         onAction={refetch}
         actionLabel="다시 시도하기"
       />
@@ -114,6 +116,11 @@ export default function Report() {
 
   return (
     <main className="flex flex-col">
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white/80">
+          <Spinner className="text-main" />
+        </div>
+      )}
       <div className="my-7 flex flex-col gap-1">
         <h4 className="h3-bold text-font-basic">
           홍보가 잘 되고 있는지 확인해봐요

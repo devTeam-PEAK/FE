@@ -24,6 +24,8 @@ import {
 } from "@/lib/api/music-promotion";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import ErrorView from "@/components/common/error-view";
 
 type ReportFormErrors = {
   promotionId: boolean;
@@ -56,7 +58,12 @@ export default function Report() {
     }
   };
 
-  const { data: promotionsData } = useQuery({
+  const {
+    data: promotionsData,
+    isLoading: isPromotionsLoading,
+    isError: isPromotionsError,
+    refetch,
+  } = useQuery({
     queryKey: ["myPagePromotions"],
     queryFn: getMyPagePromotions,
   });
@@ -85,6 +92,25 @@ export default function Report() {
       setIsLoading(false);
     }
   };
+
+  if (isPromotionsLoading) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Spinner className="text-main" />
+      </div>
+    );
+  }
+
+  if (isPromotionsError) {
+    return (
+      <ErrorView
+        title={`앨범 목록을\n불러오지 못했어요`}
+        description={`잠시 후 다시 시도해주세요.`}
+        onAction={refetch}
+        actionLabel="다시 시도하기"
+      />
+    );
+  }
 
   return (
     <main className="flex flex-col">
@@ -179,7 +205,7 @@ export default function Report() {
               }
               label="인스타그램 계정"
               placeholder="인스타그램 계정을 입력해주세요"
-              maxLength={50}
+              maxLength={31}
               value={instagram}
               onChange={handleInstagramChange}
             />

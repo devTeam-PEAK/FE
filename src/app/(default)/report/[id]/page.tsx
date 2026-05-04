@@ -1,31 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Calendar, ChevronRight } from "lucide-react";
 import Link from "next/link";
-import type { ReactNode } from "react";
 
 const STATS = [
   { label: "게시글 공유수", value: 13 },
   { label: "프로필 방문자수", value: 6 },
   { label: "링크 클릭수", value: 0 },
-];
-
-const TIPS: { title: string; description: ReactNode[] }[] = [
-  {
-    title: "게시글 끝에 링크 유도 문구 넣기",
-    description: [
-      '"프로필 링크에서 바로 들어보세요"\n한 줄만 추가해도 클릭률이 달라져요',
-    ],
-  },
-  {
-    title: "프로필 링크 문구를 신곡 제목으로 바꾸기",
-    description: [
-      "링크 이름을 “신곡 제목 듣기”처럼\n눌러보고 싶은 문구로 바꿔보세요",
-    ],
-  },
-  {
-    title: "짧고 강한 후킹 게시물 2개 올리기",
-    description: ["공유되기 쉬운 릴스나 이미지로\n반응하기 쉽게 만들어보세요"],
-  },
 ];
 
 export default function ReportDetailPage() {
@@ -75,20 +55,14 @@ export default function ReportDetailPage() {
       <section className="flex flex-col gap-2">
         <h5 className="h3-bold">이렇게 해보세요</h5>
         <ul className="flex flex-col gap-2">
-          {TIPS.map(({ title, description }, index) => (
-            <li
-              key={index}
-              className="bg-grey1 grid grid-cols-[auto_1fr] items-center gap-5 rounded-2xl px-5 py-5"
-            >
-              <div className="num bg-font-light c1-bold flex h-6 w-6 items-center justify-center rounded-full text-white">
-                {index + 1}
-              </div>
-              <div className="flex flex-col gap-1 text-wrap break-keep whitespace-pre-line">
-                <h5 className="p1-bold text-main">{title}</h5>
-                <p className="p2-regular text-font-middle">{description}</p>
-              </div>
-            </li>
-          ))}
+          <li className="bg-grey1 grid grid-cols-[1fr] items-center gap-5 rounded-2xl px-5 py-5">
+            <div className="flex flex-col gap-1 text-wrap break-keep whitespace-pre-line">
+              <h5 className="p1-bold text-main">게시글 끝에 링크 유도 문구 넣기</h5>
+              <p className="p2-regular text-font-middle">
+                {'"프로필 링크에서 바로 들어보세요"\n한 줄만 추가해도 클릭률이 달라져요'}
+              </p>
+            </div>
+          </li>
         </ul>
       </section>
 

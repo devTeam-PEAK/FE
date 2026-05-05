@@ -119,37 +119,41 @@ export default function SettingPage() {
       <section className="flex flex-col gap-6">
         <p className="p2-semibold text-font-light">앱 정보</p>
 
-        <div className="p2-medium text-font-basic">
-          <div className="flex items-center justify-between py-2">
+        <ul className="p2-medium text-font-basic">
+          <li className="flex items-center justify-between py-2">
             <span>버전 정보</span>
             <span className="text-font-light">v1.0.0</span>
-          </div>
+          </li>
 
-          <div className="flex items-center justify-between py-2">
+          <li className="flex items-center justify-between py-2">
             <span>이용문의</span>
             <span className="text-font-light">csmusicpeak@gmail.com</span>
-          </div>
+          </li>
 
-          <Link
-            href={EXTERNAL_LINKS.TERMS}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex w-full cursor-pointer items-center justify-between py-2"
-          >
-            <span>이용약관</span>
-            <ExternalLinkIcon size={16} className="text-font-light" />
-          </Link>
+          <li>
+            <Link
+              href={EXTERNAL_LINKS.TERMS}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-between py-2"
+            >
+              <span>이용약관</span>
+              <ExternalLinkIcon size={16} className="text-font-light" />
+            </Link>
+          </li>
 
-          <Link
-            href={EXTERNAL_LINKS.PRIVACY}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex w-full cursor-pointer items-center justify-between py-2"
-          >
-            <span>개인정보처리방침</span>
-            <ExternalLinkIcon size={16} className="text-font-light" />
-          </Link>
-        </div>
+          <li>
+            <Link
+              href={EXTERNAL_LINKS.PRIVACY}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex w-full items-center justify-between py-2"
+            >
+              <span>개인정보처리방침</span>
+              <ExternalLinkIcon size={16} className="text-font-light" />
+            </Link>
+          </li>
+        </ul>
       </section>
 
       <button

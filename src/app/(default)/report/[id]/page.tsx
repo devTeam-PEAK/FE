@@ -18,7 +18,7 @@ export default function ReportDetailPage() {
     try {
       const dataUrl = await toJpeg(target, {
         cacheBust: true,
-        pixelRatio: 1,
+        pixelRatio: 2,
         filter: (node: HTMLElement) => !node.dataset?.captureIgnore,
       });
       const link = document.createElement("a");
@@ -33,7 +33,7 @@ export default function ReportDetailPage() {
   return (
     <main className="flex flex-col gap-9">
       <div
-        className="bg-allwhite flex min-h-screen flex-col gap-9"
+        className="bg-allwhite flex min-h-screen flex-col gap-9 pb-24"
       >
         <div className="mt-7 flex flex-col items-start gap-1">
           <h2 className="h2-bold text-font-basic">

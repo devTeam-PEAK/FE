@@ -15,7 +15,12 @@ export default function AuthSuccess() {
       signal: controller.signal,
     })
       .then((res) => {
-        router.replace(res.ok ? "/" : "/login");
+        if (res.ok) {
+          document.cookie = "isLoggedIn=true; path=/; max-age=604800";
+          router.replace("/");
+        } else {
+          router.replace("/login");
+        }
       })
       .catch(() => router.replace("/login"))
       .finally(() => clearTimeout(timer));

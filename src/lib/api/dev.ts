@@ -14,6 +14,7 @@ export async function getDevToken(musicianId: number) {
     );
 
     localStorage.setItem("accessToken", accessToken);
+    document.cookie = "isLoggedIn=true; path=/; max-age=604800";
   } catch (e) {
     throw new Error("[dev]: 개발용 JWT 발급 실패");
   }

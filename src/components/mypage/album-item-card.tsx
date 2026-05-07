@@ -11,18 +11,30 @@ interface Props {
 export default function AlbumItemCard({ album }: Props) {
   const { analysis } = album;
 
+  const status = analysis?.status;
+  const label = analysis?.label;
+  const hasUnreadResult = analysis?.hasUnreadResult;
+
   // 진단 O → 확인 X
-  const showUnreadDot =
-    analysis.status === "COMPLETED" && analysis.hasUnreadResult;
+  const showUnreadDot = status === "COMPLETED" && hasUnreadResult;
 
   // 진단 O
-  const isCompleted = analysis.status === "COMPLETED" && analysis.label;
+  const isAnalyzed = status === "COMPLETED" && label;
 
   // 진단 X
-  const isPending = analysis.status === "PENDING";
+  const isNotAnalyzed = analysis === null;
 
   // 진단중
-  const isRunning = analysis.status === "RUNNING";
+  const isAnalyzing = status === "RUNNING";
+
+  const formattedDate = new Date(album.createdAt)
+    .toLocaleDateString("ko-KR", {
+      year: "2-digit",
+      month: "2-digit",
+      day: "2-digit",
+    })
+    .replace(/\.\s/g, ".")
+    .replace(/\.$/, "");
 
   return (
     <div>
@@ -46,7 +58,7 @@ export default function AlbumItemCard({ album }: Props) {
             <h4 className="h4-bold text-font-basic truncate">{album.title}</h4>
 
             <p className="p2-semibold text-font-middle">
-              홍보시작 | {album.createdAt}
+              홍보시작 | {formattedDate}
             </p>
 
             <div className="flex gap-2">
@@ -64,23 +76,21 @@ export default function AlbumItemCard({ album }: Props) {
               </div>
             </div>
 
-            {isCompleted && (
+            {isAnalyzed && (
               <div className="border-main-light2 bg-main-light1 mt-3 inline-flex w-fit rounded-full border px-3 py-1">
-                <span className="p2-semibold text-main-mid">
-                  {analysis.label}
-                </span>
+                <span className="p2-semibold text-main-mid">{label}</span>
               </div>
             )}
           </div>
 
-          {(isPending || isRunning) && (
+          {(isNotAnalyzed || isAnalyzing) && (
             <div className="mt-3">
               <Button
                 variant="btnPurple"
                 className="p2-bold h-9 rounded-full px-5"
-                disabled={isRunning}
+                disabled={isAnalyzing}
               >
-                {isRunning ? "진단중" : "진단하기"}
+                {isAnalyzing ? "진단중" : "진단하기"}
               </Button>
             </div>
           )}

@@ -7,73 +7,18 @@ import AlbumItemCard from "@/components/mypage/album-item-card";
 import ErrorView from "@/components/common/error-view";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AlbumItem } from "@/types/album";
-
-const MOCK_ALBUMS: AlbumItem[] = [
-  {
-    promotionId: 1,
-    title: "김피크와 함께라면",
-    coverImageUrl:
-      "https://hoppin-s3-bucket.s3.ap-northeast-2.amazonaws.com/music-promotions/2606043b-e54e-42dc-91e7-459ddc697742.png",
-    createdAt: "26.05.10",
-    totalTrackingLinkClickCount: 10,
-    totalStreamingLinkClickCount: 24,
-    analysis: {
-      status: "COMPLETED",
-      label: "효과적인 홍보",
-      hasUnreadResult: true,
-    },
-  },
-  {
-    promotionId: 2,
-    title: "이피크와 함께라면",
-    coverImageUrl:
-      "https://hoppin-s3-bucket.s3.ap-northeast-2.amazonaws.com/music-promotions/2606043b-e54e-42dc-91e7-459ddc697742.png",
-    createdAt: "26.05.20",
-    totalTrackingLinkClickCount: 13,
-    totalStreamingLinkClickCount: 8,
-    analysis: {
-      status: "COMPLETED",
-      label: "피드 반응 부족",
-      hasUnreadResult: false,
-    },
-  },
-  {
-    promotionId: 3,
-    title: "피크랑 피크닉",
-    coverImageUrl:
-      "https://hoppin-s3-bucket.s3.ap-northeast-2.amazonaws.com/music-promotions/2606043b-e54e-42dc-91e7-459ddc697742.png",
-    createdAt: "26.05.30",
-    totalTrackingLinkClickCount: 2,
-    totalStreamingLinkClickCount: 9,
-    analysis: {
-      status: "PENDING",
-      label: null,
-      hasUnreadResult: true,
-    },
-  },
-  {
-    promotionId: 4,
-    title: "피크파이팅피크파이팅피크파이팅",
-    coverImageUrl:
-      "https://hoppin-s3-bucket.s3.ap-northeast-2.amazonaws.com/music-promotions/2606043b-e54e-42dc-91e7-459ddc697742.png",
-    createdAt: "26.05.30",
-    totalTrackingLinkClickCount: 4,
-    totalStreamingLinkClickCount: 6,
-    analysis: {
-      status: "RUNNING",
-      label: null,
-      hasUnreadResult: true,
-    },
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getMyPagePromotions } from "@/lib/api/music-promotion";
 
 export default function MyPage() {
   const router = useRouter();
 
-  const isLoading = false;
-  const isError = false;
-  const albums = MOCK_ALBUMS;
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["mypage-promotions"],
+    queryFn: getMyPagePromotions,
+  });
+
+  const albums = data?.promotions ?? [];
 
   return (
     <main className="flex flex-1 flex-col gap-9">
@@ -95,8 +40,7 @@ export default function MyPage() {
           <ErrorView
             title={`요청하신 화면을\n불러오지 못했어요`}
             description={`페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요.`}
-            // onAction={refetch}
-            onAction={() => {}}
+            onAction={refetch}
             actionLabel="다시 시도하기"
           />
         </>

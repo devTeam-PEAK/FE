@@ -1,3 +1,5 @@
+import { AlbumItem } from "@/types/album";
+
 /******************************
  * Image Upload
  ******************************/
@@ -29,7 +31,7 @@ export interface MyPagePromotion {
 }
 
 export interface GetMyPagePromotionsRes {
-  promotions: MyPagePromotion[];
+  promotions: AlbumItem[];
   page: number;
   size: number;
   totalElements: number;

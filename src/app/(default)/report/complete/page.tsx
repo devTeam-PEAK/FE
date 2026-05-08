@@ -45,9 +45,22 @@ export default function Complete() {
       </section>
 
       <div className="fixed right-1/2 bottom-15 flex w-full max-w-(--max-width) translate-x-1/2 justify-center px-5">
-        <Button variant="btnPurple" size="full" asChild>
-          <Link href={"/"}>이전 진단 내역 보기</Link>
-        </Button>
+        <div className="flex w-full flex-col gap-4 px-6">
+          <Button variant="btnPurple" size="full" asChild>
+            <Link href={"/mypage"}>마이페이지로 이동</Link>
+          </Button>
+          <div className="flex flex-col gap-1 text-center">
+            <p className="text-font-light c1-medium">
+              이미 진단받은 적이 있으신가요?
+            </p>
+            <Link
+              href={"/"}
+              className="text-main c1-bold cursor-pointer underline"
+            >
+              이전 진단 내역 보기
+            </Link>
+          </div>
+        </div>
       </div>
     </main>
   );

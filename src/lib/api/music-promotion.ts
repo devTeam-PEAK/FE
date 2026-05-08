@@ -1,7 +1,7 @@
 import { fetcher } from "@/lib/api/common";
 import { MusicPromotionInfo } from "@/types/album";
 import {
-  AnalyzeRes,
+  AnalysisJobCreateRes,
   CreateMusicPromotionRes,
   GetMusicPromotionRes,
   GetMyPagePromotionsRes,
@@ -109,18 +109,21 @@ export async function getMyPagePromotions(
 }
 
 /**
- * AI 분석 요청
- * [POST] /ai/analyze/{promotionId}
+ * AI 분석 작업 생성
+ * [POST] /ai/analysis-jobs/{promotionId}
  */
 export async function analyzePromotion(
   promotionId: number,
-  payload: { sinceDate: string; instagramAccountId: string }
-): Promise<AnalyzeRes> {
+  payload: { sinceDate: string; instagramUsername: string }
+): Promise<AnalysisJobCreateRes> {
   try {
-    const res = await fetcher<AnalyzeRes>(`/ai/analyze/${promotionId}`, {
-      method: "POST",
-      body: JSON.stringify(payload),
-    });
+    const res = await fetcher<AnalysisJobCreateRes>(
+      `/ai/analysis-jobs/${promotionId}`,
+      {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }
+    );
     return res;
   } catch {
     throw new Error("[music-promotion]: AI 분석 요청 실패");

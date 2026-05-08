@@ -1,5 +1,6 @@
 "use client";
 
+import BackButton from "@/components/common/back-button";
 import { Button } from "@/components/ui/button";
 import { Calendar, ChevronRight } from "lucide-react";
 import { toJpeg } from "html-to-image";
@@ -31,10 +32,10 @@ export default function ReportDetailPage() {
   };
 
   return (
-    <main className="flex flex-col gap-9">
-      <div
-        className="bg-allwhite flex min-h-screen flex-col gap-9 pb-24"
-      >
+    <>
+      <BackButton href="/report" />
+      <main className="flex flex-col gap-9">
+        <div className="bg-allwhite flex min-h-screen flex-col gap-9 pb-24">
         <div className="mt-7 flex flex-col items-start gap-1">
           <h2 className="h2-bold text-font-basic">
             김피크님의 홍보 현황이에요
@@ -106,5 +107,6 @@ export default function ReportDetailPage() {
         </Button>
       </div>
     </main>
+    </>
   );
 }

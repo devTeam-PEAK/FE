@@ -1,5 +1,6 @@
 "use client";
 
+import BackButton from "@/components/common/back-button";
 import { Input } from "@/components/common/input";
 import { Textarea } from "@/components/common/textarea";
 import { Button } from "@/components/ui/button";
@@ -277,7 +278,9 @@ export default function AlbumPage() {
   };
 
   return (
-    <main className="flex flex-col">
+    <>
+      <BackButton />
+      <main className="flex flex-col">
       <div className="my-7 flex flex-col gap-1">
         <h4 className="h3-bold text-font-basic">신곡에 대해 얘기해주세요</h4>
         <p className="p2-regular text-font-middle">
@@ -452,5 +455,6 @@ export default function AlbumPage() {
         {isEditMode ? "수정 완료" : "홍보 링크 생성하기"}
       </Button>
     </main>
+    </>
   );
 }

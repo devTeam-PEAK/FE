@@ -34,41 +34,10 @@ export interface GetMyPagePromotionsRes {
  * AI Analyze
  ******************************/
 
-export interface AnalyzeRes {
-  headline: string;
-  diagnosis: {
-    bottleneckType: string;
-    highlightSection: string;
-    shareCount: number;
-    profileVisitCount: number;
-    linkClickCount: number;
-    interpretation: string;
-  };
-  calculatedMetrics: {
-    avgReachPerPost: number;
-    avgSharePerPost: number;
-    avgProfileVisitPerPost: number;
-    shareRateByReach: number;
-    profileVisitRateByReach: number;
-    linkClickRateByProfileVisit: number;
-    linkClickRateByReach: number;
-  };
-  channelInsight: {
-    bestChannel: string;
-    bestChannelClickRate: number;
-    summary: string;
-  };
-  postInsight: {
-    topPostPattern: string;
-    lowPostPattern: string;
-    suggestion: string;
-  };
-  actions: {
-    title: string;
-    reason: string;
-    metric: string;
-    example: string;
-  }[];
+// 크롤링 기반 AI 분석 작업 생성 Res
+export interface AnalysisJobCreateRes {
+  analysisJobId: number;
+  status: string;
 }
 
 // 뮤지션 홍보 조회 Res

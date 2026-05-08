@@ -1,8 +1,9 @@
-import Image from "next/image";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { AlbumItem } from "@/types/album";
 import { CirclePlayIcon, LinkIcon } from "lucide-react";
-import { Button } from "../ui/button";
+import Image from "next/image";
+import Link from "next/link";
 
 interface Props {
   album: AlbumItem;
@@ -90,7 +91,13 @@ export default function AlbumItemCard({ album }: Props) {
                 className="p2-bold h-9 rounded-full px-5"
                 disabled={isAnalyzing}
               >
-                {isAnalyzing ? "진단중" : "진단하기"}
+                {isAnalyzing ? (
+                  "진단중"
+                ) : (
+                  <Link href={`/report?promotionId=${album.promotionId}`}>
+                    진단하기
+                  </Link>
+                )}
               </Button>
             </div>
           )}

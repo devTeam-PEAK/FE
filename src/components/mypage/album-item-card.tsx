@@ -4,12 +4,15 @@ import { AlbumItem } from "@/types/album";
 import { CirclePlayIcon, LinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface Props {
   album: AlbumItem;
 }
 
 export default function AlbumItemCard({ album }: Props) {
+  const router = useRouter();
+
   const { analysis } = album;
 
   const status = analysis?.status;
@@ -38,7 +41,10 @@ export default function AlbumItemCard({ album }: Props) {
     .replace(/\.$/, "");
 
   return (
-    <div>
+    <div
+      className="cursor-pointer"
+      onClick={() => router.push(`/album/analysis/${album.promotionId}`)}
+    >
       <Card className="border-grey1 relative flex flex-row gap-5 rounded-3xl p-5">
         {showUnreadDot && (
           <div className="bg-danger absolute top-3 left-3 h-2 w-2 rounded-full" />
@@ -85,7 +91,7 @@ export default function AlbumItemCard({ album }: Props) {
           </div>
 
           {(isNotAnalyzed || isAnalyzing) && (
-            <div className="mt-3">
+            <div className="mt-3" onClick={(e) => e.stopPropagation()}>
               <Button
                 variant="btnPurple"
                 className="p2-bold h-9 rounded-full px-5"

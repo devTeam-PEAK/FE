@@ -4,12 +4,16 @@ import BackButton from "@/components/common/back-button";
 import ErrorView from "@/components/common/error-view";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
-import { Calendar, ChevronRight } from "lucide-react";
+import { ArrowBigRight, Calendar, ChevronRight } from "lucide-react";
 import { toJpeg } from "html-to-image";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getAnalysisPage, getDiagnosisDetail } from "@/lib/api/music-promotion";
+import {
+  getAnalysisPage,
+  getDiagnosisDetail,
+  getMusicPromotion,
+} from "@/lib/api/music-promotion";
 import { GetDiagnosisDetailRes } from "@/types/api-response";
 
 export default function ReportDetailPage() {
@@ -17,17 +21,34 @@ export default function ReportDetailPage() {
   const promotionId = Number(id);
 
   const [data, setData] = useState<GetDiagnosisDetailRes | null>(null);
+  const [activityName, setActivityName] = useState<string>("");
+  const [diagnosedDate, setDiagnosedDate] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+  const [isEmpty, setIsEmpty] = useState(false);
 
   const load = useCallback(async () => {
     setIsLoading(true);
     setIsError(false);
+    setIsEmpty(false);
     try {
-      const analysisPage = await getAnalysisPage(promotionId);
+      const [analysisPage, promotion] = await Promise.all([
+        getAnalysisPage(promotionId),
+        getMusicPromotion(promotionId),
+      ]);
+      setActivityName(promotion.activityName);
       const cards = analysisPage.diagnosisSection.diagnosisCards;
-      if (!cards.length) return;
-      const detail = await getDiagnosisDetail(promotionId, cards[0].diagnosisId);
+      if (!cards.length) {
+        setIsEmpty(true);
+        return;
+      }
+
+      // 일단 첫번째카드 diagnosisId로 상세조회 나중에 목록생기면 삭제예정
+      setDiagnosedDate(cards[0].diagnosedDate);
+      const detail = await getDiagnosisDetail(
+        promotionId,
+        cards[0].diagnosisId
+      );
       setData(detail);
     } catch {
       setIsError(true);
@@ -60,6 +81,14 @@ export default function ReportDetailPage() {
 
   const [from, to] = data?.diagnosis.highlightSection.split(" > ") ?? [];
 
+  const todayLabel = (() => {
+    const d = new Date();
+    const yy = String(d.getFullYear()).slice(-2);
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yy}.${mm}.${dd}`;
+  })();
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -72,22 +101,30 @@ export default function ReportDetailPage() {
     return (
       <ErrorView
         title={"요청하신 화면을\n불러오지 못했어요"}
-        description={"페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요."}
+        description={
+          "페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요."
+        }
         onAction={load}
       />
     );
   }
 
+  if (isEmpty || !data) return null;
+
   return (
     <>
       <BackButton href="/report" />
       <main className="flex flex-col gap-9">
-        <div className="bg-allwhite flex min-h-screen flex-col gap-9 pb-24">
+        <div className="bg-allwhite flex min-h-screen flex-col gap-9">
           <div className="mt-7 flex flex-col items-start gap-1">
-            <h2 className="h2-bold text-font-basic">홍보 현황이에요</h2>
+            <h2 className="h2-bold text-font-basic">
+              {activityName || "아티스트"}님의 홍보 현황이에요
+            </h2>
             <div className="border-border text-font-middle flex items-center gap-2 rounded-full border px-4 py-2">
               <Calendar size={16} />
-              <span className="p2-medium">{data?.periodLabel ?? "-"}</span>
+              <span className="p2-medium">
+                {diagnosedDate ? `${diagnosedDate} - ${todayLabel}` : "-"}
+              </span>
             </div>
           </div>
 
@@ -111,7 +148,7 @@ export default function ReportDetailPage() {
                   key={label}
                   className="box-item rounded-r2 bg-grey1 flex min-h-26 flex-col justify-start gap-2.5 p-2.5"
                 >
-                  <div className="c1-medium text-font-middle rounded-r1 w-full bg-white py-1">
+                  <div className="c1-medium text-font-middle rounded-r1 w-full bg-white py-1 break-keep">
                     {label}
                   </div>
                   <h1 className="text-main text-4xl font-semibold">
@@ -143,10 +180,13 @@ export default function ReportDetailPage() {
               {data?.action && (
                 <li className="bg-grey1 grid grid-cols-[1fr] items-center gap-5 rounded-2xl px-5 py-5">
                   <div className="flex flex-col gap-1 text-wrap break-keep whitespace-pre-line">
-                    <h5 className="p1-bold text-main">{data.action.title}</h5>
-                    <p className="p2-medium text-font-middle">
+                    <h5 className="p1-bold text-font-basic">
+                      {data.action.title}
+                    </h5>
+                    <h6 className="p2-bold text-main flex items-start gap-1">
+                      <ArrowBigRight size={20} fill="currentColor" />
                       {data.action.metric}
-                    </p>
+                    </h6>
                     <p className="p2-regular text-font-middle">
                       {data.action.details}
                     </p>
@@ -155,15 +195,15 @@ export default function ReportDetailPage() {
               )}
             </ul>
           </section>
-        </div>
 
-        <div
-          data-capture-ignore
-          className="fixed right-1/2 bottom-15 flex w-full max-w-(--max-width) translate-x-1/2 justify-center px-5"
-        >
-          <Button variant="btnPurple" size="full" onClick={handleSaveImage}>
-            이미지 저장하기
-          </Button>
+          <div
+            data-capture-ignore
+            className="flex w-full max-w-(--max-width) justify-center px-5"
+          >
+            <Button variant="btnPurple" size="full" onClick={handleSaveImage}>
+              이미지 저장하기
+            </Button>
+          </div>
         </div>
       </main>
     </>

@@ -42,6 +42,8 @@ export default function ReportDetailPage() {
         setIsEmpty(true);
         return;
       }
+
+      // 일단 첫번째카드 diagnosisId로 상세조회 나중에 목록생기면 삭제예정
       setDiagnosedDate(cards[0].diagnosedDate);
       const detail = await getDiagnosisDetail(
         promotionId,

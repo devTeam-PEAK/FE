@@ -22,8 +22,8 @@ const SUMMARY_METRICS = [
 ] as const;
 
 export default function ReportDetailPage() {
-  const { promotionId: promotionIdParam } = useParams<{ promotionId: string }>();
-  const promotionId = Number(promotionIdParam);
+  const params = useParams<{ promotionId: string }>();
+  const promotionId = Number(params.promotionId);
 
   const [data, setData] = useState<GetDiagnosisDetailRes | null>(null);
   const [activityName, setActivityName] = useState<string>("");

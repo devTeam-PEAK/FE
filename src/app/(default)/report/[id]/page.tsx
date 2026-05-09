@@ -75,9 +75,6 @@ export default function ReportDetailPage() {
     }
   };
 
-  const from = data?.diagnosis.highlightFrom;
-  const to = data?.diagnosis.highlightTo;
-
   const todayLabel = (() => {
     const d = new Date();
     const yy = String(d.getFullYear()).slice(-2);
@@ -107,6 +104,9 @@ export default function ReportDetailPage() {
   }
 
   if (isEmpty || !data) return null;
+
+  const from = data.diagnosis.highlightFrom;
+  const to = data.diagnosis.highlightTo;
 
   return (
     <>

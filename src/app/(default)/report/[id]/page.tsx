@@ -106,10 +106,10 @@ export default function ReportDetailPage() {
     <>
       <BackButton href="/report" />
       <main className="flex flex-col gap-9">
-        <div className="bg-allwhite flex min-h-screen flex-col gap-9 pb-24">
+        <div className="bg-allwhite flex min-h-screen flex-col gap-9">
           <div className="mt-7 flex flex-col items-start gap-1">
             <h2 className="h2-bold text-font-basic">
-              {activityName}님의 홍보 현황이에요
+              {activityName || "아티스트"}님의 홍보 현황이에요
             </h2>
             <div className="border-border text-font-middle flex items-center gap-2 rounded-full border px-4 py-2">
               <Calendar size={16} />
@@ -186,15 +186,15 @@ export default function ReportDetailPage() {
               )}
             </ul>
           </section>
-        </div>
 
-        <div
-          data-capture-ignore
-          className="fixed right-1/2 bottom-15 flex w-full max-w-(--max-width) translate-x-1/2 justify-center px-5"
-        >
-          <Button variant="btnPurple" size="full" onClick={handleSaveImage}>
-            이미지 저장하기
-          </Button>
+          <div
+            data-capture-ignore
+            className="flex w-full max-w-(--max-width) justify-center px-5"
+          >
+            <Button variant="btnPurple" size="full" onClick={handleSaveImage}>
+              이미지 저장하기
+            </Button>
+          </div>
         </div>
       </main>
     </>

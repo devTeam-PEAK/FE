@@ -59,6 +59,7 @@ export interface DiagnosisCard {
 
 export interface GetAnalysisPageRes {
   promotionId: number;
+  activityName: string;
   diagnosisSection: {
     status: string;
     diagnosisCards: DiagnosisCard[];

@@ -12,7 +12,6 @@ import { useParams } from "next/navigation";
 import {
   getAnalysisPage,
   getDiagnosisDetail,
-  getMusicPromotion,
 } from "@/lib/api/music-promotion";
 import { GetDiagnosisDetailRes } from "@/types/api-response";
 
@@ -32,11 +31,8 @@ export default function ReportDetailPage() {
     setIsError(false);
     setIsEmpty(false);
     try {
-      const [analysisPage, promotion] = await Promise.all([
-        getAnalysisPage(promotionId),
-        getMusicPromotion(promotionId),
-      ]);
-      setActivityName(promotion.activityName);
+      const analysisPage = await getAnalysisPage(promotionId);
+      setActivityName(analysisPage.activityName);
       const cards = analysisPage.diagnosisSection.diagnosisCards;
       if (!cards.length) {
         setIsEmpty(true);

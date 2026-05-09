@@ -9,7 +9,11 @@ import { toJpeg } from "html-to-image";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { getAnalysisPage, getDiagnosisDetail } from "@/lib/api/music-promotion";
+import {
+  getAnalysisPage,
+  getDiagnosisDetail,
+  getMusicPromotion,
+} from "@/lib/api/music-promotion";
 import { GetDiagnosisDetailRes } from "@/types/api-response";
 
 export default function ReportDetailPage() {
@@ -17,6 +21,8 @@ export default function ReportDetailPage() {
   const promotionId = Number(id);
 
   const [data, setData] = useState<GetDiagnosisDetailRes | null>(null);
+  const [activityName, setActivityName] = useState<string>("");
+  const [diagnosedDate, setDiagnosedDate] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -24,10 +30,18 @@ export default function ReportDetailPage() {
     setIsLoading(true);
     setIsError(false);
     try {
-      const analysisPage = await getAnalysisPage(promotionId);
+      const [analysisPage, promotion] = await Promise.all([
+        getAnalysisPage(promotionId),
+        getMusicPromotion(promotionId),
+      ]);
+      setActivityName(promotion.activityName);
       const cards = analysisPage.diagnosisSection.diagnosisCards;
       if (!cards.length) return;
-      const detail = await getDiagnosisDetail(promotionId, cards[0].diagnosisId);
+      setDiagnosedDate(cards[0].diagnosedDate);
+      const detail = await getDiagnosisDetail(
+        promotionId,
+        cards[0].diagnosisId
+      );
       setData(detail);
     } catch {
       setIsError(true);
@@ -60,6 +74,14 @@ export default function ReportDetailPage() {
 
   const [from, to] = data?.diagnosis.highlightSection.split(" > ") ?? [];
 
+  const todayLabel = (() => {
+    const d = new Date();
+    const yy = String(d.getFullYear()).slice(-2);
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const dd = String(d.getDate()).padStart(2, "0");
+    return `${yy}.${mm}.${dd}`;
+  })();
+
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -72,7 +94,9 @@ export default function ReportDetailPage() {
     return (
       <ErrorView
         title={"요청하신 화면을\n불러오지 못했어요"}
-        description={"페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요."}
+        description={
+          "페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요."
+        }
         onAction={load}
       />
     );
@@ -84,10 +108,14 @@ export default function ReportDetailPage() {
       <main className="flex flex-col gap-9">
         <div className="bg-allwhite flex min-h-screen flex-col gap-9 pb-24">
           <div className="mt-7 flex flex-col items-start gap-1">
-            <h2 className="h2-bold text-font-basic">홍보 현황이에요</h2>
+            <h2 className="h2-bold text-font-basic">
+              {activityName}님의 홍보 현황이에요
+            </h2>
             <div className="border-border text-font-middle flex items-center gap-2 rounded-full border px-4 py-2">
               <Calendar size={16} />
-              <span className="p2-medium">{data?.periodLabel ?? "-"}</span>
+              <span className="p2-medium">
+                {diagnosedDate ? `${diagnosedDate} - ${todayLabel}` : "-"}
+              </span>
             </div>
           </div>
 

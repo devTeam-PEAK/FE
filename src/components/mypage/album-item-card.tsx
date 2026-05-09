@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AlbumItem } from "@/types/album";
-import { CirclePlayIcon, LinkIcon } from "lucide-react";
+import { LinkIcon, CirclePlayIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -64,9 +64,15 @@ export default function AlbumItemCard({ album }: Props) {
           <div className="flex flex-col gap-1">
             <h4 className="h4-bold text-font-basic truncate">{album.title}</h4>
 
-            <p className="p2-semibold text-font-middle">
-              홍보시작 | {formattedDate}
-            </p>
+            <div className="flex items-center gap-2">
+              <div className="p2-semibold-leading-none text-font-light">
+                홍보시작
+              </div>
+              <span className="bg-border h-3 w-px" />
+              <div className="p2-semibold-leading-none text-font-middle">
+                {formattedDate}
+              </div>
+            </div>
 
             <div className="flex gap-2">
               <div className="flex items-center gap-1">

@@ -130,15 +130,15 @@ export default function ReportDetailPage() {
               {[
                 {
                   label: "팔로워 대비 반응률",
-                  value: data?.summaryMetrics.followerEngagementRate,
+                  value: data.summaryMetrics.followerEngagementRate,
                 },
                 {
                   label: "반응 대비 홍보 클릭률",
-                  value: data?.summaryMetrics.promoClickRateByEngagement,
+                  value: data.summaryMetrics.promoClickRateByEngagement,
                 },
                 {
                   label: "홍보 대비 스트리밍 클릭률",
-                  value: data?.summaryMetrics.streamingClickRateByPromoClick,
+                  value: data.summaryMetrics.streamingClickRateByPromoClick,
                 },
               ].map(({ label, value }) => (
                 <div
@@ -166,7 +166,7 @@ export default function ReportDetailPage() {
                 이에요
               </h6>
               <div className="bg-brand-gradient rounded-r2 p-4 break-keep whitespace-pre-line text-white">
-                {data?.headline}
+                {data.headline}
               </div>
             </section>
           </div>
@@ -174,7 +174,7 @@ export default function ReportDetailPage() {
           <section className="flex flex-col gap-2">
             <h5 className="h3-bold">지금 바로 바꿔보세요</h5>
             <ul className="flex flex-col gap-2">
-              {data?.action && (
+              {data.action && (
                 <li className="bg-grey1 grid grid-cols-[1fr] items-center gap-5 rounded-2xl px-5 py-5">
                   <div className="flex flex-col gap-1 text-wrap break-keep whitespace-pre-line">
                     <h5 className="p1-bold text-font-basic">

@@ -1,12 +1,13 @@
 "use client";
 
 import BackButton from "@/components/common/back-button";
+import ErrorView from "@/components/common/error-view";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { Calendar, ChevronRight } from "lucide-react";
 import { toJpeg } from "html-to-image";
 import { toast } from "sonner";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getAnalysisPage, getDiagnosisDetail } from "@/lib/api/music-promotion";
 import { GetDiagnosisDetailRes } from "@/types/api-response";
@@ -17,26 +18,27 @@ export default function ReportDetailPage() {
 
   const [data, setData] = useState<GetDiagnosisDetailRes | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  const load = useCallback(async () => {
+    setIsLoading(true);
+    setIsError(false);
+    try {
+      const analysisPage = await getAnalysisPage(promotionId);
+      const cards = analysisPage.diagnosisSection.diagnosisCards;
+      if (!cards.length) return;
+      const detail = await getDiagnosisDetail(promotionId, cards[0].diagnosisId);
+      setData(detail);
+    } catch {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [promotionId]);
 
   useEffect(() => {
-    const load = async () => {
-      try {
-        const analysisPage = await getAnalysisPage(promotionId);
-        const cards = analysisPage.diagnosisSection.diagnosisCards;
-        if (!cards.length) return;
-        const detail = await getDiagnosisDetail(
-          promotionId,
-          cards[0].diagnosisId
-        );
-        setData(detail);
-      } catch {
-        toast.error("데이터를 불러오는데 실패했어요.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
     load();
-  }, [promotionId]);
+  }, [load]);
 
   const handleSaveImage = async () => {
     const target = document.getElementById("app-root");
@@ -63,6 +65,16 @@ export default function ReportDetailPage() {
       <div className="flex min-h-screen items-center justify-center">
         <Spinner className="text-main" />
       </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <ErrorView
+        title={"요청하신 화면을\n불러오지 못했어요"}
+        description={"페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요."}
+        onAction={load}
+      />
     );
   }
 

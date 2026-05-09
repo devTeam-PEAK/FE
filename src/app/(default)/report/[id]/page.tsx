@@ -79,7 +79,8 @@ export default function ReportDetailPage() {
     }
   };
 
-  const [from, to] = data?.diagnosis.highlightSection.split(" > ") ?? [];
+  const from = data?.diagnosis.highlightFrom;
+  const to = data?.diagnosis.highlightTo;
 
   const todayLabel = (() => {
     const d = new Date();

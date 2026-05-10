@@ -11,21 +11,21 @@ import {
 } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
-import Link from "next/link";
-import { CalendarIcon } from "lucide-react";
-import { useState } from "react";
-import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+import BackButton from "@/components/common/back-button";
+import ErrorView from "@/components/common/error-view";
+import { toast } from "sonner";
+import { CalendarIcon } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   analyzePromotion,
   getMyPagePromotions,
 } from "@/lib/api/music-promotion";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { Spinner } from "@/components/ui/spinner";
-import ErrorView from "@/components/common/error-view";
-import BackButton from "@/components/common/back-button";
+import { format } from "date-fns";
 
 type ReportFormErrors = {
   promotionId: boolean;
@@ -35,9 +35,15 @@ type ReportFormErrors = {
 
 export default function ReportForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const promotionIdFromQuery = searchParams.get("promotionId");
+
   const [date, setDate] = useState<Date | undefined>();
   const [calendarOpen, setCalendarOpen] = useState(false);
-  const [selectedPromotionId, setSelectedPromotionId] = useState<string>("");
+  const [selectedPromotionId, setSelectedPromotionId] = useState<string>(
+    promotionIdFromQuery ?? ""
+  );
   const [instagram, setInstagram] = useState("@");
   const [errors, setErrors] = useState<ReportFormErrors>({
     promotionId: false,
@@ -67,9 +73,16 @@ export default function ReportForm() {
     refetch,
   } = useQuery({
     queryKey: ["myPagePromotions"],
-    queryFn: getMyPagePromotions,
+    queryFn: () => getMyPagePromotions(0),
   });
+
+  // 조회된 프로모션 목록
   const promotions = promotionsData?.promotions ?? [];
+
+  // 쿼리를 통해 전달된 프로모션
+  const queryPromotion = promotions.find(
+    (p) => String(p.promotionId) === promotionIdFromQuery
+  );
 
   const handleSubmit = async () => {
     const newErrors: ReportFormErrors = {
@@ -123,7 +136,7 @@ export default function ReportForm() {
             <Spinner className="text-main" />
           </div>
         )}
-        <div className="my-7 flex flex-col gap-1">
+        <div className="flex flex-col gap-1">
           <h4 className="h3-bold text-font-basic">
             홍보가 잘 되고 있는지 확인해봐요
           </h4>
@@ -165,49 +178,60 @@ export default function ReportForm() {
                 생성된 홍보 링크 기준으로 분석해드려요
               </p>
             </div>
-            <Select
-              value={selectedPromotionId}
-              onValueChange={(v) => {
-                setSelectedPromotionId(v);
-                setErrors((prev) => ({ ...prev, promotionId: false }));
-              }}
-            >
-              <SelectTrigger
-                className={errors.promotionId ? "border-danger" : ""}
-                disabled={promotions.length === 0}
-              >
-                <SelectValue
-                  placeholder={
-                    promotions.length === 0
-                      ? "생성된 홍보 링크가 없어요"
-                      : "앨범 선택하기"
-                  }
-                />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectGroup>
-                  {promotions.map((p) => (
-                    <SelectItem
-                      key={p.promotionId}
-                      value={String(p.promotionId)}
-                    >
-                      {p.title}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <div className="flex flex-col gap-1 text-center">
-              <p className="text-font-light c1-medium cursor-pointer">
-                홍보 링크가 없으신가요?
-              </p>
-              <Link
-                href={"/album"}
-                className="text-main cursor-pointer text-xs font-bold underline"
-              >
-                새 홍보 링크 만들기
-              </Link>
-            </div>
+
+            {!!queryPromotion ? (
+              <div className="border-border rounded-r1 flex h-10 items-center border px-4">
+                <span className="p2-medium text-font-basic">
+                  {queryPromotion.title}
+                </span>
+              </div>
+            ) : (
+              <>
+                <Select
+                  value={selectedPromotionId}
+                  onValueChange={(v) => {
+                    setSelectedPromotionId(v);
+                    setErrors((prev) => ({ ...prev, promotionId: false }));
+                  }}
+                >
+                  <SelectTrigger
+                    className={errors.promotionId ? "border-danger" : ""}
+                    disabled={promotions.length === 0}
+                  >
+                    <SelectValue
+                      placeholder={
+                        promotions.length === 0
+                          ? "생성된 홍보 링크가 없어요"
+                          : "앨범 선택하기"
+                      }
+                    />
+                  </SelectTrigger>
+                  <SelectContent position="popper">
+                    <SelectGroup>
+                      {promotions.map((p) => (
+                        <SelectItem
+                          key={p.promotionId}
+                          value={String(p.promotionId)}
+                        >
+                          {p.title}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                <div className="flex flex-col gap-1 text-center">
+                  <p className="text-font-light c1-medium cursor-pointer">
+                    홍보 링크가 없으신가요?
+                  </p>
+                  <Link
+                    href={"/album"}
+                    className="text-main cursor-pointer text-xs font-bold underline"
+                  >
+                    새 홍보 링크 만들기
+                  </Link>
+                </div>
+              </>
+            )}
           </section>
 
           <section className="flex flex-col gap-3">
@@ -241,9 +265,9 @@ export default function ReportForm() {
               </p>
             </div>
             <Input
-              className={
+              className={`bg-white ${
                 errors.date ? "border-danger focus-visible:ring-danger" : ""
-              }
+              }`}
               label="발매일"
               placeholder="YYYY.MM.DD"
               value={date ? format(date, "yyyy.MM.dd") : ""}

@@ -1,3 +1,5 @@
+import { AlbumItem } from "@/types/album";
+
 /******************************
  * Image Upload
  ******************************/
@@ -19,17 +21,8 @@ export interface CreateMusicPromotionRes {
 }
 
 // 마이페이지 프로모션 목록 조회 Res
-export interface MyPagePromotion {
-  promotionId: number;
-  title: string;
-  coverImageUrl: string;
-  shareCount: number;
-  profileVisitCount: number;
-  linkClickCount: number;
-}
-
 export interface GetMyPagePromotionsRes {
-  promotions: MyPagePromotion[];
+  promotions: AlbumItem[];
   page: number;
   size: number;
   totalElements: number;

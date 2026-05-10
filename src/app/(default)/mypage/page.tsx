@@ -1,168 +1,97 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
+import BackButton from "@/components/common/back-button";
+import AlbumItemCard from "@/components/mypage/album-item-card";
+import ErrorView from "@/components/common/error-view";
 import Link from "next/link";
-import { useOpenAlertModal } from "@/stores/alert-modal-store";
-import { toast } from "sonner";
-import AlbumCarousel, { AlbumData } from "@/components/mypage/album-carousel";
+import { useRef, useEffect } from "react";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import {
   getMyPagePromotions,
-  getMusicPromotion,
-  deleteMusicPromotion,
+  subscribePromotionStream,
 } from "@/lib/api/music-promotion";
-import { getStreamingCode } from "@/utils/album";
-import { Spinner } from "@/components/ui/spinner";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import ErrorView from "@/components/common/error-view";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-async function fetchAlbums(): Promise<AlbumData[]> {
-  const { promotions } = await getMyPagePromotions();
-  const details = await Promise.all(
-    [...promotions]
-      .sort((a, b) => b.promotionId - a.promotionId)
-      .map((p) => getMusicPromotion(p.promotionId))
-  );
-
-  return details.map((data) => ({
-    id: String(data.promotionId),
-    coverUrl: data.imageUrl,
-    title: data.songTitle,
-    artist: data.activityName,
-    releaseDate: data.releaseDate,
-    message: data.shortDescription,
-    streamingLinks: data.streamingLinks
-      .sort((a, b) => a.displayOrder - b.displayOrder)
-      .map((link) => {
-        const code = getStreamingCode(link.url);
-        if (!code) return null;
-
-        return {
-          code,
-          url: link.clickUrl,
-        };
-      })
-      .filter((v): v is NonNullable<typeof v> => v !== null),
-    link: data.trackingUrl,
-  }));
-}
 
 export default function MyPage() {
-  const router = useRouter();
-  const openAlertModal = useOpenAlertModal();
-  const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(null);
-
   const queryClient = useQueryClient();
+
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
   const {
-    data: albums = [],
+    data,
     isLoading,
     isError,
     refetch,
-  } = useQuery<AlbumData[]>({
-    queryKey: ["myPageAlbums"],
-    queryFn: fetchAlbums,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ["mypage-promotions"],
+    queryFn: ({ pageParam = 0 }) => getMyPagePromotions(pageParam),
+
+    initialPageParam: 0,
+
+    getNextPageParam: (lastPage) => {
+      if (!lastPage.hasNext) return undefined;
+      return lastPage.page + 1;
+    },
   });
 
-  const selectedAlbum =
-    albums.find((a) => a.id === selectedAlbumId) ?? albums[0] ?? null;
+  // SSE 실시간 구독
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
 
-  const handleSelect = useCallback((album: AlbumData) => {
-    setSelectedAlbumId(album.id);
-  }, []);
+    if (!token) return;
 
-  const handleCopy = async () => {
-    if (!selectedAlbum) return;
-    try {
-      await navigator.clipboard.writeText(selectedAlbum.link);
-      toast.success("링크가 복사되었습니다!", { position: "bottom-center" });
-    } catch {
-      toast.error("복사에 실패했습니다.", { position: "bottom-center" });
-    }
-  };
+    const controller = subscribePromotionStream({
+      token,
 
-  const handleLogout = async () => {
-    await fetch(`${BASE_URL}/auth/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
-    document.cookie = "isLoggedIn=; path=/; max-age=0";
-    localStorage.removeItem("accessToken");
-    router.push("/");
-    router.refresh();
-  };
-
-  const handleDeleteAlbum = (album: AlbumData) => {
-    openAlertModal({
-      type: "confirm",
-      message: (
-        <>
-          페이지 삭제 시{"\n"}
-          <span className="p2-semibold">
-            기존 링크를 통한 팬 반응 수집이 중지돼요.
-          </span>
-          {"\n"}
-          정말 삭제하시겠어요?
-        </>
-      ),
-      onAction: async () => {
-        try {
-          await deleteMusicPromotion(Number(album.id));
-          queryClient.setQueryData<AlbumData[]>(["myPageAlbums"], (prev = []) =>
-            prev.filter((a) => a.id !== album.id)
-          );
-          setSelectedAlbumId(null);
-        } catch {
-          toast.error("삭제에 실패했어요. 잠시 후 다시 시도해 주세요.");
-        }
+      // 진단 상태 변경 시 목록 최신화
+      onPromotionUpdated: () => {
+        queryClient.invalidateQueries({
+          queryKey: ["mypage-promotions"],
+        });
       },
     });
-  };
 
-  const handleWithdraw = () => {
-    openAlertModal({
-      type: "confirm",
-      message: (
-        <>
-          탈퇴 시{" "}
-          <span className="p2-semibold">
-            현재 사용 중인 모든 링크와 정보가 사라지고
-          </span>
-          {"\n"}
-          이후{" "}
-          <span className="p2-semibold">
-            3개월간 동일 계정으로 재가입이 불가
-          </span>
-          해요.{"\n"}
-          정말 탈퇴하시겠어요?
-        </>
-      ),
-      onAction: async () => {
-        try {
-          const res = await fetch(`${BASE_URL}/me/delete`, {
-            method: "DELETE",
-            credentials: "include",
-          });
-          if (!res.ok) {
-            toast.error("회원탈퇴에 실패했어요. 잠시 후 다시 시도해 주세요.");
-            return;
-          }
-          document.cookie = "onboarding=; path=/; max-age=0";
-          document.cookie = "isLoggedIn=; path=/; max-age=0";
-          localStorage.removeItem("accessToken");
-          router.replace("/onboarding");
-          router.refresh();
-        } catch {
-          toast.error("네트워크 오류로 회원탈퇴에 실패했어요.");
+    // 컴포넌트 언마운트 시 SSE 연결 종료
+    return () => {
+      controller.abort();
+    };
+  }, [queryClient]);
+
+  // 무한스크롤 observer 등록
+  useEffect(() => {
+    const target = observerRef.current;
+
+    if (!target || !hasNextPage) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
         }
       },
-    });
-  };
+      {
+        rootMargin: "24px",
+      }
+    );
+
+    observer.observe(target);
+
+    return () => {
+      observer.unobserve(target);
+      observer.disconnect();
+    };
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  const albums = data?.pages.flatMap((page) => page.promotions) ?? [];
 
   return (
-    <main className="flex flex-1 flex-col gap-6 px-5 pt-10">
+    <main className="flex flex-1 flex-col gap-9">
+      <BackButton title="마이페이지" />
+
       {isLoading ? (
         <div className="flex flex-1 items-center justify-center">
           <Spinner className="text-main" />
@@ -177,59 +106,40 @@ export default function MyPage() {
           />
         </>
       ) : albums.length > 0 ? (
-        <>
-          <AlbumCarousel
-            albums={albums}
-            onSelect={handleSelect}
-            onDelete={handleDeleteAlbum}
-          />
-          <div className="flex flex-col gap-2">
-            <Button
-              variant="btnPurple"
-              size="full"
-              onClick={handleCopy}
-            >
-              🔗 링크 복사
-            </Button>
-            <Button
-              variant="btnWhite"
-              size="full"
-              onClick={() =>
-                selectedAlbum && router.push(`/album?edit=${selectedAlbum.id}`)
-              }
-            >
-              수정하기
-            </Button>
+        <section className="flex flex-col gap-5">
+          <div className="flex items-end justify-between">
+            <h3 className="h3-bold text-font-basic">앨범 홍보 목록</h3>
+            <span className="c1-bold text-font-light">최신순 (업데이트순)</span>
           </div>
-        </>
+
+          <div className="flex flex-col gap-2">
+            {albums.map((album, index) => (
+              <AlbumItemCard
+                key={album.promotionId}
+                album={album}
+                priority={index === 0}
+              />
+            ))}
+          </div>
+
+          {isFetchingNextPage && (
+            <div className="flex justify-center py-8">
+              <Spinner className="text-main" />
+            </div>
+          )}
+
+          <div ref={observerRef} className="h-1" />
+        </section>
       ) : (
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
           <p className="p2-medium text-font-middle">
-            현재 만들어진 홍보 페이지가 없어요
+            현재 만들어진 홍보 링크가 없어요.
+            <br />
+            링크를 만들고 앨범 홍보를 시작해보세요!
           </p>
           <Button variant="btnPurple" size="full" asChild>
-            <Link href="/album">신곡 홍보 링크 만들기</Link>
+            <Link href="/album">홍보 링크 만들러 가기 💨</Link>
           </Button>
-        </div>
-      )}
-
-      {!isError && (
-        <div className="flex items-center justify-center">
-          <button
-            className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
-            onClick={handleWithdraw}
-          >
-            회원탈퇴
-          </button>
-          <div className="flex h-6 w-6 items-center justify-center">
-            <span className="bg-border h-4 w-px"></span>
-          </div>
-          <button
-            className="p2-semibold text-font-middle cursor-pointer px-4 py-3"
-            onClick={handleLogout}
-          >
-            로그아웃
-          </button>
         </div>
       )}
     </main>

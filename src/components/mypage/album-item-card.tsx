@@ -19,17 +19,18 @@ export default function AlbumItemCard({ album }: Props) {
   const label = analysis?.label;
   const hasUnreadResult = analysis?.hasUnreadResult;
 
-  // 진단 O → 확인 X
-  const showUnreadDot = status === "COMPLETED" && hasUnreadResult;
-
   // 진단 O
-  const isAnalyzed = status === "COMPLETED" && label;
+  const isAnalyzed = status === "COMPLETED" && !!label;
+
+  // 진단 O → 확인 X
+  const showUnreadDot = isAnalyzed && hasUnreadResult;
 
   // 진단 X
-  const isNotAnalyzed = analysis === null;
+  const isNotAnalyzed = status === "PENDING" || analysis === null;
 
   // 진단중
-  const isAnalyzing = status === "RUNNING";
+  const isAnalyzing =
+    status === "RUNNING" || (status === "COMPLETED" && !label);
 
   const formattedDate = new Date(album.createdAt)
     .toLocaleDateString("ko-KR", {

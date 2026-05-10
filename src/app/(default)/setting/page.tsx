@@ -1,7 +1,8 @@
 "use client";
 
+import BackButton from "@/components/common/back-button";
 import { toast } from "sonner";
-import { ChevronLeftIcon, ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -82,12 +83,7 @@ export default function SettingPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <header className="text-font-middle relative flex items-center">
-        <button className="cursor-pointer" onClick={() => router.back()}>
-          <ChevronLeftIcon size={32} />
-        </button>
-        <h3 className="h3-bold absolute left-1/2 -translate-x-1/2">설정</h3>
-      </header>
+      <BackButton title="설정" />
 
       <section className="mb-6 flex flex-col gap-2">
         <p className="p2-semibold text-font-light">계정 정보</p>

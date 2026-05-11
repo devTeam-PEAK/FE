@@ -26,7 +26,7 @@ export default function HomeButtons({ showIntro }: { showIntro: boolean }) {
           onClick={dismissIntro}
         />
       )}
-      <div className="flex flex-col gap-4">
+      <div className="flex w-full flex-col gap-2">
         <Tooltip open={showIntroState}>
           <TooltipTrigger asChild>
             <Button
@@ -34,7 +34,7 @@ export default function HomeButtons({ showIntro }: { showIntro: boolean }) {
               size="full"
               onClick={() => router.push("/album")}
             >
-              신곡 홍보 링크 만들기
+              앨범 홍보 링크 만들기
             </Button>
           </TooltipTrigger>
           <TooltipContent>

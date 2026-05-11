@@ -192,6 +192,26 @@ export async function patchDiagnosisRead(promotionId: number): Promise<void> {
 }
 
 /**
+ * 미확인 진단 존재 여부 조회
+ * [GET] /mypage/promotions/unread-exists
+ */
+export async function getDiagnosisUnreadExists(): Promise<boolean> {
+  try {
+    const res: boolean = await fetcher<boolean>(
+      "/mypage/promotions/unread-exists",
+      {
+        method: "GET",
+      }
+    );
+
+    return res;
+  } catch (e) {
+    console.error("[music-promotion] 미확인 진단 존재 여부 조회 실패", e);
+    throw e;
+  }
+}
+
+/**
  * AI 분석 작업 생성
  * [POST] /ai/analysis-jobs/{promotionId}
  */

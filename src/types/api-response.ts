@@ -24,6 +24,23 @@ export interface CreateMusicPromotionRes {
   promotionId: number;
 }
 
+// 뮤지션 홍보 조회 Res
+export interface GetMusicPromotionRes {
+  promotionId: number;
+  activityName: string;
+  songTitle: string;
+  releaseDate: string;
+  imageUrl: string;
+  shortDescription: string;
+  createdAt: string;
+  trackingUrl: string;
+  streamingLinks: {
+    url: string;
+    clickUrl: string;
+    displayOrder: number;
+  }[];
+}
+
 // 마이페이지 프로모션 목록 조회 Res
 export interface GetMyPagePromotionsRes {
   promotions: AlbumItem[];
@@ -103,23 +120,6 @@ export interface GetDiagnosisDetailRes {
     metric: string;
     details: string;
   };
-}
-
-// 뮤지션 홍보 조회 Res
-export interface GetMusicPromotionRes {
-  promotionId: number;
-  activityName: string;
-  songTitle: string;
-  releaseDate: string;
-  imageUrl: string;
-  shortDescription: string;
-  createdAt: string;
-  trackingUrl: string;
-  streamingLinks: {
-    url: string;
-    clickUrl: string;
-    displayOrder: number;
-  }[];
 }
 
 /******************************

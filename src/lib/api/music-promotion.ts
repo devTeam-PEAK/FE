@@ -197,9 +197,12 @@ export async function patchDiagnosisRead(promotionId: number): Promise<void> {
  */
 export async function getDiagnosisUnreadExists(): Promise<boolean> {
   try {
-    const res: boolean = await fetcher("/mypage/promotions/unread-exists", {
-      method: "GET",
-    });
+    const res: boolean = await fetcher<boolean>(
+      "/mypage/promotions/unread-exists",
+      {
+        method: "GET",
+      }
+    );
 
     return res;
   } catch (e) {

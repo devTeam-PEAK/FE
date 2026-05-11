@@ -1,10 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { AlbumItem } from "@/types/album";
+import DiagnosisLabel from "@/components/mypage/diagnosis-label";
 import { LinkIcon, CirclePlayIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { AlbumItem } from "@/types/album";
 
 interface Props {
   album: AlbumItem;
@@ -47,7 +48,7 @@ export default function AlbumItemCard({ album, priority = false }: Props) {
       className="cursor-pointer"
       onClick={() => router.push(`/album/analysis/${album.promotionId}`)}
     >
-      <Card className="border-grey1 relative flex flex-row gap-5 rounded-3xl p-5">
+      <Card className="border-grey1 rounded-r2 relative flex flex-row gap-5 p-5">
         {showUnreadDot && (
           <div className="bg-danger absolute top-3 left-3 h-2 w-2 rounded-full" />
         )}
@@ -77,7 +78,7 @@ export default function AlbumItemCard({ album, priority = false }: Props) {
               </div>
             </div>
 
-            <div className="flex gap-2">
+            <div className="mb-3 flex gap-2">
               <div className="flex items-center gap-1">
                 <LinkIcon className="text-main-light2" size={16} />
                 <span className="p1-semibold text-main-mid">
@@ -92,11 +93,7 @@ export default function AlbumItemCard({ album, priority = false }: Props) {
               </div>
             </div>
 
-            {isAnalyzed && (
-              <div className="border-main-light2 bg-main-light1 mt-3 inline-flex w-fit rounded-full border px-3 py-1">
-                <span className="p2-semibold text-main-mid">{label}</span>
-              </div>
-            )}
+            {isAnalyzed && <DiagnosisLabel label={label} />}
           </div>
 
           {(isNotAnalyzed || isAnalyzing) && (

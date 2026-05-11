@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 interface OpenState {
   isOpen: true;
   type: "alert" | "confirm";
+  variant: "warning" | "danger" | "success";
   message: ReactNode;
   onAction?: () => void;
   onCancel?: () => void;

@@ -1,8 +1,14 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { TriangleAlertIcon } from "lucide-react";
+import Image from "next/image";
 import { useAlertModal } from "@/stores/alert-modal-store";
+
+const VARIANT_IMAGE: Record<"warning" | "danger" | "success", string> = {
+  warning: "/character/modal-warning.png",
+  danger: "/character/modal-danger.png",
+  success: "/character/modal-success.png",
+};
 
 export default function AlertModal() {
   const store = useAlertModal();
@@ -22,13 +28,23 @@ export default function AlertModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50">
-      <div className="flex flex-col items-center gap-4 rounded-2xl bg-white px-6 py-5 text-center">
-        <TriangleAlertIcon className="text-main" size={28} />
-
-        <div className="p2-regular text-font-middle whitespace-pre-line text-center">
+    <div
+      className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50"
+      onClick={handleCancelClick}
+    >
+      <div
+        className="flex flex-col items-center gap-2.5 rounded-2xl bg-white px-6 py-5 text-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p2-regular text-font-basic text-center whitespace-pre-line">
           {store.message}
         </div>
+        <Image
+          src={VARIANT_IMAGE[store.variant]}
+          alt={store.variant}
+          width={120}
+          height={95}
+        />
 
         <div className="flex gap-1">
           {isConfirm && (

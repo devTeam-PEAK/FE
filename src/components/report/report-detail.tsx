@@ -9,26 +9,24 @@ import { toJpeg } from "html-to-image";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import {
-  getAnalysisPage,
-  getDiagnosisDetail,
-} from "@/lib/api/music-promotion";
+import { getDiagnosisDetail, getMusicPromotion } from "@/lib/api/music-promotion";
 import { GetDiagnosisDetailRes } from "@/types/api-response";
 
 const SUMMARY_METRICS = [
-  { label: "팔로워 대비 반응률", key: "followerEngagementRate" },
-  { label: "반응 대비 홍보 클릭률", key: "promoClickRateByEngagement" },
-  { label: "홍보 대비 스트리밍 클릭률", key: "streamingClickRateByPromoClick" },
+  { label: "피드 반응률", key: "followerEngagementRate" },
+  { label: "홍보링크 클릭률", key: "promoClickRateByEngagement" },
+  { label: "스트리밍 클릭률", key: "streamingClickRateByPromoClick" },
 ] as const;
 
 export default function ReportDetail() {
   const params = useParams<{ promotionId: string }>();
   const promotionId = Number(params.promotionId);
   const searchParams = useSearchParams();
-  const diagnosisId = searchParams.get("diagnosisId") ? Number(searchParams.get("diagnosisId")) : undefined;
+  const diagnosisId = searchParams.get("diagnosisId")
+    ? Number(searchParams.get("diagnosisId"))
+    : undefined;
   const [data, setData] = useState<GetDiagnosisDetailRes | null>(null);
   const [activityName, setActivityName] = useState<string>("");
-  const [diagnosedDate, setDiagnosedDate] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -38,21 +36,15 @@ export default function ReportDetail() {
     setIsError(false);
     setIsEmpty(false);
     try {
-      const analysisPage = await getAnalysisPage(promotionId);
-      setActivityName(analysisPage.activityName);
-      const cards = analysisPage.diagnosis;
-      if (!cards.length) {
+      if (!diagnosisId) {
         setIsEmpty(true);
         return;
       }
-
-      const targetCard = cards.find((c) => c.diagnosisId === diagnosisId);
-      if (!targetCard) {
-        setIsEmpty(true);
-        return;
-      }
-      setDiagnosedDate(targetCard.diagnosedDate);
-      const detail = await getDiagnosisDetail(promotionId, targetCard.diagnosisId);
+      const [promotion, detail] = await Promise.all([
+        getMusicPromotion(promotionId),
+        getDiagnosisDetail(promotionId, diagnosisId),
+      ]);
+      setActivityName(promotion.activityName);
       setData(detail);
     } catch {
       setIsError(true);
@@ -83,13 +75,6 @@ export default function ReportDetail() {
     }
   };
 
-  const todayLabel = (() => {
-    const d = new Date();
-    const yy = String(d.getFullYear()).slice(-2);
-    const mm = String(d.getMonth() + 1).padStart(2, "0");
-    const dd = String(d.getDate()).padStart(2, "0");
-    return `${yy}.${mm}.${dd}`;
-  })();
 
   if (isLoading) {
     return (
@@ -111,7 +96,15 @@ export default function ReportDetail() {
     );
   }
 
-  if (isEmpty || !data) return null;
+  if (isEmpty || !data)
+    return (
+      <ErrorView
+        title={"진단 결과를 찾을 수 없어요"}
+        description={
+          "진단결과가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요."
+        }
+      />
+    );
 
   const from = data.diagnosis.highlightFrom;
   const to = data.diagnosis.highlightTo;
@@ -121,30 +114,33 @@ export default function ReportDetail() {
       <BackButton href="/report" />
       <main className="flex flex-col gap-9">
         <div className="bg-allwhite flex min-h-screen flex-col gap-9">
-          <div className="mt-7 flex flex-col items-start gap-1">
+          <div className="flex flex-col items-start gap-1">
             <h2 className="h2-bold text-font-basic">
               {activityName || "아티스트"}님의 홍보 현황이에요
             </h2>
             <div className="border-border text-font-middle flex items-center gap-2 rounded-full border px-4 py-2">
               <Calendar size={16} />
               <span className="p2-medium">
-                {diagnosedDate ? `${diagnosedDate} - ${todayLabel}` : "-"}
+                {data.periodLabel || "-"}
               </span>
             </div>
           </div>
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-9">
             <section className="grid grid-cols-3 gap-5 text-center">
               {SUMMARY_METRICS.map(({ label, key }) => (
                 <div
                   key={label}
-                  className="box-item rounded-r2 bg-grey1 flex min-h-26 flex-col justify-start gap-2.5 p-2.5"
+                  className="box-item rounded-r2 bg-grey1 flex flex-col justify-start gap-2.5 p-2.5"
                 >
                   <div className="c1-medium text-font-middle rounded-r1 w-full bg-white py-1 break-keep">
                     {label}
                   </div>
-                  <h1 className="text-main text-4xl font-semibold">
-                    {data.summaryMetrics[key] ?? "-"}
+                  <h1 className="text-main flex items-center justify-center gap-1">
+                    <span className="h2-bold">
+                      {Math.round(data.summaryMetrics[key] * 10) / 10}
+                    </span>
+                    <span className="p1-bold">%</span>
                   </h1>
                 </div>
               ))}
@@ -160,7 +156,7 @@ export default function ReportDetail() {
                 </span>
                 이에요
               </h6>
-              <div className="bg-brand-gradient rounded-r2 p-4 break-keep whitespace-pre-line text-white">
+              <div className="bg-brand-gradient rounded-r2 c1-medium p-4 break-keep whitespace-pre-line text-white">
                 {data.headline}
               </div>
             </section>
@@ -168,8 +164,8 @@ export default function ReportDetail() {
 
           <section className="flex flex-col gap-2">
             <h5 className="h3-bold">지금 바로 바꿔보세요</h5>
-            <ul className="flex flex-col gap-2">
-              {data.action && (
+            {data.action && (
+              <ul className="flex flex-col gap-2">
                 <li className="bg-grey1 grid grid-cols-[1fr] items-center gap-5 rounded-2xl px-5 py-5">
                   <div className="flex flex-col gap-1 text-wrap break-keep whitespace-pre-line">
                     <h5 className="p1-bold text-font-basic">
@@ -184,8 +180,8 @@ export default function ReportDetail() {
                     </p>
                   </div>
                 </li>
-              )}
-            </ul>
+              </ul>
+            )}
           </section>
 
           <div

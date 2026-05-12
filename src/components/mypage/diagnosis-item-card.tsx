@@ -38,7 +38,7 @@ export default function DiagnosisItemCard({
     if (!isAnalyzed) return;
 
     router.push(
-      `/report/${promotionId}?diagnosisId=${diagnosisId}&diagnosedDate=${diagnosedDate}`
+      `/report/${promotionId}?diagnosisId=${diagnosisId}`
     );
   };
 

@@ -219,6 +219,10 @@
     font-weight: var(--font-weight-b);
     line-height: 140%;
   }
+  .p1-bold-leading-none {
+    font-size: var(--text-p1);
+    font-weight: var(--font-weight-b);
+  }
   .p1-semibold {
     font-size: var(--text-p1);
     font-weight: var(--font-weight-sb);
@@ -243,6 +247,10 @@
     font-size: var(--text-p2);
     font-weight: var(--font-weight-b);
     line-height: 130%;
+  }
+  .p2-bold-leading-none {
+    font-size: var(--text-p2);
+    font-weight: var(--font-weight-b);
   }
   .p2-semibold {
     font-size: var(--text-p2);

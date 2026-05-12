@@ -1,4 +1,4 @@
-import { AlbumItem } from "@/types/album";
+import { AlbumItem, AnalysisStatus } from "@/types/album";
 
 /******************************
  * Musician
@@ -22,6 +22,23 @@ export interface GetMeRes {
 // 뮤지션 홍보 생성 Res
 export interface CreateMusicPromotionRes {
   promotionId: number;
+}
+
+// 뮤지션 홍보 조회 Res
+export interface GetMusicPromotionRes {
+  promotionId: number;
+  activityName: string;
+  songTitle: string;
+  releaseDate: string;
+  imageUrl: string;
+  shortDescription: string;
+  createdAt: string;
+  trackingUrl: string;
+  streamingLinks: {
+    url: string;
+    clickUrl: string;
+    displayOrder: number;
+  }[];
 }
 
 // 마이페이지 프로모션 목록 조회 Res
@@ -52,7 +69,7 @@ export interface DiagnosisCard {
   headline: string;
   actionTitle: string;
   unread: boolean;
-  status: string;
+  status: AnalysisStatus;
 }
 
 export interface GetAnalysisPageRes {
@@ -103,23 +120,6 @@ export interface GetDiagnosisDetailRes {
     metric: string;
     details: string;
   };
-}
-
-// 뮤지션 홍보 조회 Res
-export interface GetMusicPromotionRes {
-  promotionId: number;
-  activityName: string;
-  songTitle: string;
-  releaseDate: string;
-  imageUrl: string;
-  shortDescription: string;
-  createdAt: string;
-  trackingUrl: string;
-  streamingLinks: {
-    url: string;
-    clickUrl: string;
-    displayOrder: number;
-  }[];
 }
 
 /******************************

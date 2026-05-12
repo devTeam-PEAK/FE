@@ -9,23 +9,22 @@ import { toJpeg } from "html-to-image";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import {
-  getAnalysisPage,
-  getDiagnosisDetail,
-} from "@/lib/api/music-promotion";
+import { getAnalysisPage, getDiagnosisDetail } from "@/lib/api/music-promotion";
 import { GetDiagnosisDetailRes } from "@/types/api-response";
 
 const SUMMARY_METRICS = [
-  { label: "팔로워 대비 반응률", key: "followerEngagementRate" },
-  { label: "반응 대비 홍보 클릭률", key: "promoClickRateByEngagement" },
-  { label: "홍보 대비 스트리밍 클릭률", key: "streamingClickRateByPromoClick" },
+  { label: "피드 반응률", key: "followerEngagementRate" },
+  { label: "홍보링크  클릭률", key: "promoClickRateByEngagement" },
+  { label: "스트리밍 클릭률", key: "streamingClickRateByPromoClick" },
 ] as const;
 
 export default function ReportDetail() {
   const params = useParams<{ promotionId: string }>();
   const promotionId = Number(params.promotionId);
   const searchParams = useSearchParams();
-  const diagnosisId = searchParams.get("diagnosisId") ? Number(searchParams.get("diagnosisId")) : undefined;
+  const diagnosisId = searchParams.get("diagnosisId")
+    ? Number(searchParams.get("diagnosisId"))
+    : undefined;
   const [data, setData] = useState<GetDiagnosisDetailRes | null>(null);
   const [activityName, setActivityName] = useState<string>("");
   const [diagnosedDate, setDiagnosedDate] = useState<string>("");
@@ -52,7 +51,10 @@ export default function ReportDetail() {
         return;
       }
       setDiagnosedDate(targetCard.diagnosedDate);
-      const detail = await getDiagnosisDetail(promotionId, targetCard.diagnosisId);
+      const detail = await getDiagnosisDetail(
+        promotionId,
+        targetCard.diagnosisId
+      );
       setData(detail);
     } catch {
       setIsError(true);
@@ -138,13 +140,18 @@ export default function ReportDetail() {
               {SUMMARY_METRICS.map(({ label, key }) => (
                 <div
                   key={label}
-                  className="box-item rounded-r2 bg-grey1 flex min-h-26 flex-col justify-start gap-2.5 p-2.5"
+                  className="box-item rounded-r2 bg-grey1 flex flex-col justify-start gap-2.5 p-2.5"
                 >
                   <div className="c1-medium text-font-middle rounded-r1 w-full bg-white py-1 break-keep">
                     {label}
                   </div>
-                  <h1 className="text-main text-4xl font-semibold">
-                    {data.summaryMetrics[key] ?? "-"}
+                  <h1 className="text-main flex items-center justify-center gap-1">
+                    <span className="h2-bold">
+                      {data.summaryMetrics[key] != null
+                        ? Math.round(data.summaryMetrics[key] * 10) / 10
+                        : "-"}
+                    </span>
+                    <span className="p1-bold">%</span>
                   </h1>
                 </div>
               ))}

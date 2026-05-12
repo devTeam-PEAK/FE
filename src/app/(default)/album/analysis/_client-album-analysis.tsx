@@ -11,7 +11,7 @@ import DiagnosisSection from "@/components/mypage/analysis-diagnosis-section";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { getAnalysisPage } from "@/lib/api/music-promotion";
+import { patchDiagnosisRead, getAnalysisPage } from "@/lib/api/music-promotion";
 import { useOpenAlertModal } from "@/stores/alert-modal-store";
 import { formatDate } from "@/utils/date";
 import { GetAnalysisPageRes } from "@/types/api-response";
@@ -27,6 +27,8 @@ export default function AlbumAnalysisPage({ promotionId }: Props) {
   const [data, setData] = useState<GetAnalysisPageRes | null>(null);
 
   useEffect(() => {
+    patchDiagnosisRead(promotionId); // 읽음 처리
+
     const fetchData = async () => {
       try {
         const res = await getAnalysisPage(promotionId);

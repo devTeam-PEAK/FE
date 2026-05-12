@@ -464,7 +464,7 @@ export default function AlbumPage() {
         </section>
 
         <Button variant="btnPurple" size="full" onClick={handleSubmit}>
-          {isEditMode ? "홍보 링크 수정하기" : "홍보 링크 만들기"}
+          {isEditMode ? "수정 완료" : "홍보 링크 만들기"}
         </Button>
       </main>
     </>

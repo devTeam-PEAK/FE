@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import BackButton from "@/components/common/back-button";
+import AlbumAnalysisActionButton from "@/components/mypage/album-analysis-action-button";
 import DiagnosisItemCard from "@/components/mypage/diagnosis-item-card";
 import { LinkIcon, CirclePlayIcon } from "lucide-react";
 import Image from "next/image";
@@ -85,29 +86,10 @@ export default function ClientAlbumAnalysis({ promotionId }: Props) {
             </ul>
           </div>
 
-          <div className="flex w-full flex-col gap-3">
-            <div className="flex gap-3">
-              <Button
-                variant="btnPurpleSub"
-                className="p2-bold h-9 flex-1 rounded-full"
-              >
-                홍보 페이지 수정
-              </Button>
-              <Button
-                variant="btnPurpleSub"
-                className="p2-bold h-9 flex-1 rounded-full"
-              >
-                {" "}
-                홍보 페이지 삭제
-              </Button>
-            </div>
-            <Button
-              variant="btnPurple"
-              className="p2-bold h-9 w-full rounded-full"
-            >
-              🔗 홍보 페이지 링크 복사
-            </Button>
-          </div>
+          <AlbumAnalysisActionButton
+            promotionId={data.promotionId}
+            trackingUrl={data.trackingUrl}
+          />
         </section>
 
         <Separator className="-mx-5" />

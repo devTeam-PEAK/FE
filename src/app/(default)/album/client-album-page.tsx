@@ -38,6 +38,7 @@ export default function AlbumPage() {
   // 수정 모드 여부 판단
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
+  const redirect = searchParams.get("redirect");
   const isEditMode = !!editId;
 
   // 앨범 커버 이미지 상태
@@ -263,7 +264,7 @@ export default function AlbumPage() {
         // 3. 뮤지션 홍보 수정 API 호출
         await updateMusicPromotion(Number(editId), payload);
         toast.success("수정이 완료되었습니다!", { position: "bottom-center" });
-        router.push(`/album/${editId}`);
+        router.push(redirect || `/album/${editId}`);
       } else {
         // 3. 뮤지션 홍보 생성 API 호출
         const { promotionId } = await createMusicPromotion(payload);

@@ -31,7 +31,7 @@ export default function AlbumActionButton({
   };
 
   const handleEdit = () => {
-    router.push(`/album?edit=${promotionId}`);
+    router.push(`/album?edit=${promotionId}&redirect=/album/${promotionId}`);
   };
 
   return (

@@ -14,7 +14,7 @@ import { GetDiagnosisDetailRes } from "@/types/api-response";
 
 const SUMMARY_METRICS = [
   { label: "피드 반응률", key: "followerEngagementRate" },
-  { label: "홍보링크  클릭률", key: "promoClickRateByEngagement" },
+  { label: "홍보링크 클릭률", key: "promoClickRateByEngagement" },
   { label: "스트리밍 클릭률", key: "streamingClickRateByPromoClick" },
 ] as const;
 
@@ -113,7 +113,15 @@ export default function ReportDetail() {
     );
   }
 
-  if (isEmpty || !data) return null;
+  if (isEmpty || !data)
+    return (
+      <ErrorView
+        title={"진단 결과를 찾을 수 없어요"}
+        description={
+          "진단결과가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요."
+        }
+      />
+    );
 
   const from = data.diagnosis.highlightFrom;
   const to = data.diagnosis.highlightTo;
@@ -147,9 +155,7 @@ export default function ReportDetail() {
                   </div>
                   <h1 className="text-main flex items-center justify-center gap-1">
                     <span className="h2-bold">
-                      {data.summaryMetrics[key] != null
-                        ? Math.round(data.summaryMetrics[key] * 10) / 10
-                        : "-"}
+                      {Math.round(data.summaryMetrics[key] * 10) / 10}
                     </span>
                     <span className="p1-bold">%</span>
                   </h1>
@@ -175,8 +181,8 @@ export default function ReportDetail() {
 
           <section className="flex flex-col gap-2">
             <h5 className="h3-bold">지금 바로 바꿔보세요</h5>
-            <ul className="flex flex-col gap-2">
-              {data.action && (
+            {data.action && (
+              <ul className="flex flex-col gap-2">
                 <li className="bg-grey1 grid grid-cols-[1fr] items-center gap-5 rounded-2xl px-5 py-5">
                   <div className="flex flex-col gap-1 text-wrap break-keep whitespace-pre-line">
                     <h5 className="p1-bold text-font-basic">
@@ -191,8 +197,8 @@ export default function ReportDetail() {
                     </p>
                   </div>
                 </li>
-              )}
-            </ul>
+              </ul>
+            )}
           </section>
 
           <div

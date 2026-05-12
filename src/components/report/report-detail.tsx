@@ -9,7 +9,7 @@ import { toJpeg } from "html-to-image";
 import { toast } from "sonner";
 import { useCallback, useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { getAnalysisPage, getDiagnosisDetail } from "@/lib/api/music-promotion";
+import { getDiagnosisDetail, getMusicPromotion } from "@/lib/api/music-promotion";
 import { GetDiagnosisDetailRes } from "@/types/api-response";
 
 const SUMMARY_METRICS = [
@@ -25,9 +25,9 @@ export default function ReportDetail() {
   const diagnosisId = searchParams.get("diagnosisId")
     ? Number(searchParams.get("diagnosisId"))
     : undefined;
+  const diagnosedDate = searchParams.get("diagnosedDate") ?? "";
   const [data, setData] = useState<GetDiagnosisDetailRes | null>(null);
   const [activityName, setActivityName] = useState<string>("");
-  const [diagnosedDate, setDiagnosedDate] = useState<string>("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [isEmpty, setIsEmpty] = useState(false);
@@ -37,24 +37,15 @@ export default function ReportDetail() {
     setIsError(false);
     setIsEmpty(false);
     try {
-      const analysisPage = await getAnalysisPage(promotionId);
-      setActivityName(analysisPage.activityName);
-      const cards = analysisPage.diagnosis;
-      if (!cards.length) {
+      if (!diagnosisId) {
         setIsEmpty(true);
         return;
       }
-
-      const targetCard = cards.find((c) => c.diagnosisId === diagnosisId);
-      if (!targetCard) {
-        setIsEmpty(true);
-        return;
-      }
-      setDiagnosedDate(targetCard.diagnosedDate);
-      const detail = await getDiagnosisDetail(
-        promotionId,
-        targetCard.diagnosisId
-      );
+      const [promotion, detail] = await Promise.all([
+        getMusicPromotion(promotionId),
+        getDiagnosisDetail(promotionId, diagnosisId),
+      ]);
+      setActivityName(promotion.activityName);
       setData(detail);
     } catch {
       setIsError(true);

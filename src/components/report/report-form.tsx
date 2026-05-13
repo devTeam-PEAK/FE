@@ -252,12 +252,12 @@ export default function ReportForm() {
                           {p.title}
                         </SelectItem>
                       ))}
-                      {isFetchingNextPage && (
-                        <div className="flex justify-center py-2">
-                          <Spinner className="text-main" />
-                        </div>
-                      )}
                     </SelectGroup>
+                    {isFetchingNextPage && (
+                      <div className="flex justify-center py-2">
+                        <Spinner className="text-main" />
+                      </div>
+                    )}
                   </SelectContent>
                 </Select>
                 <div className="flex flex-col gap-1 text-center">

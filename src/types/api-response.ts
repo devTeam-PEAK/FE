@@ -51,6 +51,21 @@ export interface GetMyPagePromotionsRes {
   hasNext: boolean;
 }
 
+// 마이페이지 프로모션 제목 목록 조회 Res
+export interface PromotionTitleItem {
+  promotionId: number;
+  title: string;
+}
+
+export interface GetMyPagePromotionsTitlesRes {
+  promotions: PromotionTitleItem[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
 /******************************
  * AI Analyze
  ******************************/
@@ -121,6 +136,17 @@ export interface GetDiagnosisDetailRes {
     metric: string;
     details: string;
   };
+}
+
+/******************************
+ * Instagram
+ ******************************/
+
+// 인스타그램 계정 유효성 검사 Res
+export interface ValidateInstagramRes {
+  valid: boolean;
+  status: string;
+  message: string;
 }
 
 /******************************

@@ -8,6 +8,8 @@ import {
   GetDiagnosisDetailRes,
   GetMusicPromotionRes,
   GetMyPagePromotionsRes,
+  GetMyPagePromotionsTitlesRes,
+  ValidateInstagramRes,
 } from "@/types/api-response";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -83,6 +85,26 @@ export async function deleteMusicPromotion(promotionId: number): Promise<void> {
     });
   } catch (e) {
     console.error("[music-promotion]: 뮤지션 홍보 삭제 실패");
+    throw e;
+  }
+}
+
+/**
+ * 마이페이지 프로모션 제목 목록 조회
+ * [GET] /mypage/promotionsTitle
+ */
+export async function getMyPagePromotionsTitles(
+  page = 0
+): Promise<GetMyPagePromotionsTitlesRes> {
+  try {
+    const params = new URLSearchParams({ page: page.toString() });
+    const res = await fetcher<GetMyPagePromotionsTitlesRes>(
+      `/mypage/promotionsTitle?${params.toString()}`,
+      { method: "GET" }
+    );
+    return res;
+  } catch (e) {
+    console.error("[music-promotion]: 마이페이지 프로모션 제목 목록 조회 실패");
     throw e;
   }
 }
@@ -208,6 +230,27 @@ export async function getDiagnosisUnreadExists(): Promise<boolean> {
   } catch (e) {
     console.error("[music-promotion] 미확인 진단 존재 여부 조회 실패", e);
     throw e;
+  }
+}
+
+/**
+ * 인스타그램 계정 유효성 검사
+ * [POST] /crawling/instagram/profile/validate
+ */
+export async function validateInstagramProfile(
+  instagramUsername: string
+): Promise<ValidateInstagramRes> {
+  try {
+    const res = await fetcher<ValidateInstagramRes>(
+      "/crawling/instagram/profile/validate",
+      {
+        method: "POST",
+        body: JSON.stringify({ instagramUsername }),
+      }
+    );
+    return res;
+  } catch {
+    throw new Error("[instagram]: 인스타그램 계정 유효성 검사 실패");
   }
 }
 

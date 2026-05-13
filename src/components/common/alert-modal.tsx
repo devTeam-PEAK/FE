@@ -34,7 +34,7 @@ export default function AlertModal() {
       <div
         role="dialog"
         aria-modal="true"
-        className="flex min-w-[330px] flex-col items-center gap-2.5 rounded-2xl bg-white px-6 py-5 text-center"
+        className="flex min-w-82.5 flex-col items-center gap-2.5 rounded-2xl bg-white px-6 py-5 text-center"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="p2-regular text-font-basic text-center whitespace-pre-line">

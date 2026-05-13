@@ -242,6 +242,7 @@ export default function ReportForm() {
                   <SelectContent
                     position="popper"
                     onViewportScroll={handleSelectScroll}
+                    viewportClassName="max-h-33"
                   >
                     <SelectGroup>
                       {promotions.map((p) => (

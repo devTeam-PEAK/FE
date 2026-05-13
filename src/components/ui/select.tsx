@@ -71,9 +71,11 @@ function SelectContent({
   position = "item-aligned",
   align = "center",
   onViewportScroll,
+  viewportClassName,
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content> & {
   onViewportScroll?: React.UIEventHandler<HTMLDivElement>;
+  viewportClassName?: string;
 }) {
   return (
     <SelectPrimitive.Portal>
@@ -97,7 +99,8 @@ function SelectContent({
           data-position={position}
           className={cn(
             "data-[position=popper]:w-full data-[position=popper]:min-w-(--radix-select-trigger-width)",
-            position === "popper" && "max-h-33 overflow-y-auto"
+            position === "popper" && "overflow-y-auto",
+            viewportClassName
           )}
           onScroll={onViewportScroll}
         >

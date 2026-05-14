@@ -66,10 +66,16 @@ export default function ReportDetail() {
         pixelRatio: 2,
         filter: (node: HTMLElement) => !node.dataset?.captureIgnore,
       });
-      const link = document.createElement("a");
-      link.download = "report.jpg";
-      link.href = dataUrl;
-      link.click();
+      const blob = await fetch(dataUrl).then((r) => r.blob());
+      const file = new File([blob], "report.jpg", { type: "image/jpeg" });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file] });
+      } else {
+        const link = document.createElement("a");
+        link.download = "report.jpg";
+        link.href = dataUrl;
+        link.click();
+      }
     } catch {
       toast.error("이미지 저장에 실패했어요. 잠시 후 다시 시도해주세요.");
     }

@@ -1,6 +1,6 @@
 export const EXTERNAL_LINKS = {
   TERMS:
-    "https://www.notion.so/goormkdx/PEAK-34bc0ff4ce318055b56de402af767268?source=copy_link",
+    "https://brave-fuschia-700.notion.site/PEAK-35fd960a7b0e802f9ca1e2c0c153ba9c",
   PRIVACY:
-    "https://www.notion.so/goormkdx/PEAK-356c0ff4ce31806dbf70c98b5942486c?source=copy_link",
+    "https://brave-fuschia-700.notion.site/PEAK-35fd960a7b0e80ff843bd76d11f920a0",
 };

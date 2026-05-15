@@ -4,10 +4,9 @@ import BackButton from "@/components/common/back-button";
 import { Input } from "@/components/common/input";
 import { Textarea } from "@/components/common/textarea";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
 import { toast } from "sonner";
-import { PlusIcon, ImageIcon, CalendarIcon, XIcon } from "lucide-react";
+import CalendarInput from "@/components/common/calendar-input";
+import { PlusIcon, ImageIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -49,7 +48,6 @@ export default function AlbumPage() {
   const [artist, setArtist] = useState("");
   const [albumName, setAlbumName] = useState("");
   const [date, setDate] = useState<Date | undefined>();
-  const [calendarOpen, setCalendarOpen] = useState(false);
   const [links, setLinks] = useState<string[]>([""]);
   const [originalLinks, setOriginalLinks] = useState<
     { url: string; clickUrl: string }[]
@@ -376,46 +374,12 @@ export default function AlbumPage() {
             }
           />
 
-          <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
-            <DialogTrigger asChild>
-              <div>
-                <Input
-                  className={
-                    errors.date ? "border-danger focus-visible:ring-danger" : ""
-                  }
-                  label="발매일"
-                  placeholder="YYYY.MM.DD"
-                  value={date ? format(date, "yyyy.MM.dd") : ""}
-                  readOnly
-                  iconBtn={
-                    <div className="flex cursor-pointer items-center justify-center">
-                      <CalendarIcon size={24} />
-                    </div>
-                  }
-                />
-              </div>
-            </DialogTrigger>
-
-            <DialogContent className="max-w-2xs p-0" showCloseButton={false}>
-              <Calendar
-                mode="single"
-                selected={date}
-                onSelect={(d) => {
-                  setDate(d);
-                  setCalendarOpen(false);
-                }}
-                className="flex w-full"
-                classNames={{
-                  months:
-                    "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                  month: "space-y-4 w-full flex flex-col",
-                  table: "w-full h-full border-collapse space-y-1",
-                  head_row: "",
-                  row: "w-full mt-2",
-                }}
-              />
-            </DialogContent>
-          </Dialog>
+          <CalendarInput
+            label="발매일"
+            value={date}
+            onChange={(value) => updateField("date", value, setDate)}
+            error={errors.date}
+          />
 
           {links.map((link, idx) => (
             <Input

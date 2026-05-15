@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
-import Autoplay from "embla-carousel-autoplay";
 import AutoHeight from "embla-carousel-auto-height";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -43,8 +42,7 @@ const SLIDES: Slide[] = [
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false }, [
-    Autoplay({ delay: 5000, stopOnInteraction: false }),
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, watchDrag: false }, [
     AutoHeight(),
   ]);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
@@ -111,8 +109,6 @@ export default function OnboardingPage() {
           <div
             className="embla__viewport"
             ref={emblaRef}
-            onMouseEnter={() => emblaApi?.plugins()?.autoplay?.stop()}
-            onMouseLeave={() => emblaApi?.plugins()?.autoplay?.play()}
           >
             <div className="embla__container">
               {SLIDES.map((slide, index) => (

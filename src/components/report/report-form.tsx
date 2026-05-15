@@ -95,7 +95,12 @@ export default function ReportForm() {
   const handleSelectScroll: React.UIEventHandler<HTMLDivElement> = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
     const remaining = scrollHeight - scrollTop - clientHeight;
-    if (scrollTop > 0 && remaining <= 50 && hasNextPage && !isFetchingNextPage) {
+    if (
+      scrollTop > 0 &&
+      remaining <= 50 &&
+      hasNextPage &&
+      !isFetchingNextPage
+    ) {
       fetchNextPage();
     }
   };

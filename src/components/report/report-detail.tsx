@@ -81,7 +81,6 @@ export default function ReportDetail() {
     }
   };
 
-
   if (isLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
@@ -174,7 +173,7 @@ export default function ReportDetail() {
             <h5 className="h3-bold">지금 바로 바꿔보세요</h5>
             {data.action && (
               <ul className="flex flex-col gap-2">
-                <li className="bg-grey1 grid grid-cols-[1fr] items-center gap-5 rounded-2xl px-5 py-5">
+                <li className="bg-grey1 rounded-2xl px-5 py-5">
                   <div className="flex flex-col gap-1 text-wrap break-keep whitespace-pre-line">
                     <h5 className="p1-bold text-font-basic">
                       {data.action.title}

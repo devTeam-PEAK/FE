@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import FadeMotion from "@/components/common/fade-motion";
 
 export default async function Complete({
   searchParams,
@@ -8,6 +9,7 @@ export default async function Complete({
 }) {
   const { promotionId } = await searchParams;
   return (
+    <FadeMotion x={20}>
     <main className="flex h-fit flex-col justify-between gap-16">
       <div className="mt-7 flex flex-col gap-1">
         <h4 className="h3-bold text-font-basic">진단 신청 완료!</h4>
@@ -68,5 +70,6 @@ export default async function Complete({
         </div>
       </div>
     </main>
+    </FadeMotion>
   );
 }

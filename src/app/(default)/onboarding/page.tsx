@@ -35,15 +35,15 @@ const SLIDES: Slide[] = [
     titleHighlight: "PEAK가 찾아드려요",
     description: "진단하기를 누르면\n홍보 현황부터 해결책까지 알려줘요",
     src: "/tutorial/step03.png",
-    // imgClassName: "max-h-[338px] w-auto object-contain",
   },
 ];
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const [emblaRef, emblaApi] = useEmblaCarousel(
-    { loop: false, watchDrag: false }
-  );
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    watchDrag: false,
+  });
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canNext, setCanNext] = useState(false);
@@ -97,8 +97,12 @@ export default function OnboardingPage() {
                     {slide.titleBefore}
                     <br />
                     <span className="text-main">{slide.titleHighlight}</span>
-                    <br />
-                    {slide.titleAfter}
+                    {slide.titleAfter && (
+                      <>
+                        <br />
+                        {slide.titleAfter}
+                      </>
+                    )}
                   </h1>
                   <p className="text-font-light p2-semibold">
                     {slide.description.split("\n").map((line, i) => (

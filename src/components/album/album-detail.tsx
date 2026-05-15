@@ -2,7 +2,6 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import StreamingButton from "@/components/album/streaming-button";
 import { StreamingItem } from "@/types/album";
-import { Trash2 } from "lucide-react";
 
 interface Props {
   coverUrl: string;
@@ -22,8 +21,6 @@ export default function AlbumDetail({
   releaseDate,
   streamingLinks,
   message,
-  showDelete = false,
-  onDelete,
 }: Props) {
   return (
     <section className="relative flex flex-col gap-9">
@@ -44,7 +41,7 @@ export default function AlbumDetail({
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="p1-bold text-font-middle">음원 들으러 가기</p>
+        <p className="p1-bold text-font-middle">앨범 들으러 가기</p>
         <div className="grid grid-cols-2 gap-2">
           {streamingLinks.map((item) => (
             <StreamingButton
@@ -62,13 +59,6 @@ export default function AlbumDetail({
           <CardContent className="whitespace-pre-line">{message}</CardContent>
         </Card>
       </div>
-      {showDelete && (
-        <Trash2
-          className="text-font-light absolute top-0 right-0 z-999 cursor-pointer"
-          size={24}
-          onClick={onDelete}
-        />
-      )}
     </section>
   );
 }

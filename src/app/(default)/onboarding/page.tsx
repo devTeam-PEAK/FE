@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { Button } from "@/components/ui/button";
-import AutoHeight from "embla-carousel-auto-height";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -17,19 +16,18 @@ type Slide = {
 
 const SLIDES: Slide[] = [
   {
-    titleBefore: "새 음원 홍보,",
+    titleBefore: "새 앨범 홍보,",
     titleHighlight: "어떻게 해야 할지 몰라",
     titleAfter: "막막하셨죠?",
     description: "이젠 혼자 하지 마세요.\nPEAK가 도와드릴게요!",
     src: "/tutorial/step01.png",
-    imgClassName: "h-auto w-[245px] object-contain",
   },
   {
     titleBefore: "신곡을 냈다면",
     titleHighlight: "홍보 링크를",
     titleAfter: "만들어보세요",
     description:
-      "신곡 정보 입력하면 홍보 링크 완성!\n인스타그램 프로필에 딱 붙여두면 돼요.",
+      "앨범 정보 입력하면 홍보 페이지 완성!\n페이지 링크를 복사해서\n인스타그램 프로필에 딱 붙여두면 돼요.",
     src: "/tutorial/step02.png",
   },
   {
@@ -37,18 +35,18 @@ const SLIDES: Slide[] = [
     titleHighlight: "PEAK가 찾아드려요",
     description: "진단하기를 누르면\n홍보 현황부터 해결책까지 알려줘요",
     src: "/tutorial/step03.png",
+    // imgClassName: "max-h-[338px] w-auto object-contain",
   },
 ];
 
 export default function OnboardingPage() {
   const router = useRouter();
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false, watchDrag: false }, [
-    AutoHeight(),
-  ]);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: false, watchDrag: false }
+  );
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [canNext, setCanNext] = useState(false);
-  const scrollTo = (index: number) => emblaApi?.scrollTo(index);
 
   const handleFinish = () => {
     document.cookie = "onboarding=done; path=/; max-age=31536000";
@@ -67,7 +65,6 @@ export default function OnboardingPage() {
     };
     const onSelect = () => {
       setSelectedIndex(emblaApi.selectedScrollSnap());
-
       setCanNext(emblaApi.canScrollNext());
     };
 
@@ -76,89 +73,84 @@ export default function OnboardingPage() {
     emblaApi.on("reInit", onInit);
     emblaApi.on("select", onSelect);
 
-    //cleanup
     return () => {
       emblaApi.off("reInit", onInit);
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi]);
+
   return (
-    <main className="px-5">
-      <div className="mt-20 mb-16 flex flex-col items-center gap-12 text-center">
-        <div className="flex flex-col gap-6">
-          <h1 className="h1-bold text-font-basic">
-            {SLIDES[selectedIndex].titleBefore}
-            <br />
-            <span className="text-main">
-              {SLIDES[selectedIndex].titleHighlight}
-            </span>
-            <br />
-            {SLIDES[selectedIndex].titleAfter}
-          </h1>
-          <p className="text-font-middle p2-semibold">
-            {SLIDES[selectedIndex].description.split("\n").map((line, i) => (
-              <span key={i}>
-                {line}
-                <br />
-              </span>
-            ))}
-          </p>
-        </div>
-        <>
-          {/* Carousel */}
-          <div
-            className="embla__viewport"
-            ref={emblaRef}
-          >
-            <div className="embla__container">
-              {SLIDES.map((slide, index) => (
-                <div key={index} className="embla__slide">
-                  <div className="flex items-start justify-center">
-                    <Image
-                      src={slide.src}
-                      alt="설명 이미지"
-                      width={244}
-                      height={244}
-                      className={
-                        slide.imgClassName ?? "h-auto w-70 object-contain"
-                      }
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Dots */}
-          <div className="embla__dots flex gap-3">
-            {scrollSnaps.map((_, index) => (
-              <button
+    <main className="flex flex-1 flex-col px-5 pb-9">
+      <div className="mt-16 flex flex-1 flex-col items-center gap-10 text-center">
+        <div
+          className="embla__viewport h-[574.65px] w-full overflow-hidden"
+          ref={emblaRef}
+        >
+          <div className="embla__container">
+            {SLIDES.map((slide, index) => (
+              <div
                 key={index}
-                onClick={() => scrollTo(index)}
-                className={`embla__dot cursor-pointer ${
-                  index === selectedIndex ? "embla__dot--selected" : ""
-                }`}
-              />
+                className="embla__slide flex flex-col items-center gap-3"
+              >
+                <div className="flex flex-col gap-3">
+                  <h1 className="h1-bold text-font-basic">
+                    {slide.titleBefore}
+                    <br />
+                    <span className="text-main">{slide.titleHighlight}</span>
+                    <br />
+                    {slide.titleAfter}
+                  </h1>
+                  <p className="text-font-light p2-semibold">
+                    {slide.description.split("\n").map((line, i) => (
+                      <span key={i}>
+                        {line}
+                        <br />
+                      </span>
+                    ))}
+                  </p>
+                </div>
+                <div className="flex min-h-[430.24px] items-center justify-center">
+                  <Image
+                    src={slide.src}
+                    alt="설명 이미지"
+                    width={244}
+                    height={244}
+                    className={
+                      slide.imgClassName ?? "h-auto w-70 object-contain"
+                    }
+                  />
+                </div>
+              </div>
             ))}
           </div>
-        </>
-      </div>
+        </div>
 
-      <div className="flex flex-col gap-4">
-        <Button
-          variant="btnPurple"
-          size="full"
-          className="embla__next"
-          onClick={handleNext}
-        >
-          다음
-        </Button>
-        <button
-          className="text-font-light p2-semibold cursor-pointer"
-          onClick={handleFinish}
-        >
-          건너뛰기
-        </button>
+        <div className="embla__dots flex justify-center gap-3">
+          {scrollSnaps.map((_, dotIndex) => (
+            <button
+              key={dotIndex}
+              onClick={() => emblaApi?.scrollTo(dotIndex)}
+              className={`embla__dot cursor-pointer ${dotIndex === selectedIndex ? "embla__dot--selected" : ""}`}
+            />
+          ))}
+        </div>
+
+        <div className="mt-auto flex w-full flex-col gap-4">
+          <Button
+            variant="btnPurple"
+            size="full"
+            className="embla__next"
+            onClick={handleNext}
+          >
+            다음
+          </Button>
+          <button
+            className="text-font-light p2-semibold cursor-pointer"
+            onClick={handleFinish}
+          >
+            건너뛰기
+          </button>
+        </div>
       </div>
     </main>
   );

@@ -28,7 +28,7 @@ import {
 } from "@/utils/validation";
 import { format } from "date-fns";
 
-const VALID_COVER_IMG_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_COVER_IMG_SIZE = 30 * 1024 * 1024; // 30MB
 const MAX_LINK = 4;
 
 export default function AlbumPage() {
@@ -147,16 +147,14 @@ export default function AlbumPage() {
   };
 
   const handleSelectImage = (file: File) => {
-    if (!VALID_COVER_IMG_TYPES.includes(file.type)) {
+    if (file.size > MAX_COVER_IMG_SIZE) {
       openAlertModal({
         type: "alert",
         variant: "warning",
         message: (
           <>
-            지원하지 않는 파일 형식입니다.{"\n"}
-            <span className="p2-semibold">JPG, JPEG, PNG, WEBP</span> 형식의
-            이미지만 {"\n"}
-            업로드할 수 있습니다.
+            <span className="p2-semibold">최대 30MB 이하</span>의 이미지만{"\n"}
+            업로드할 수 있어요.
           </>
         ),
       });
@@ -204,8 +202,8 @@ export default function AlbumPage() {
         message: (
           <>
             <span className="p2-semibold">
-              스포티파이 ∙ 애플뮤직 ∙ 멜론 ∙ 유튜브뮤직 ∙ 사운드클라우드{"\n"}
-            </span>
+              스포티파이 ∙ 애플뮤직 ∙ 멜론 ∙ 유튜브뮤직{"\n"}사운드클라우드
+            </span>{" "}
             링크만 입력 가능해요.
           </>
         ),
@@ -295,54 +293,63 @@ export default function AlbumPage() {
       <BackButton />
       <main className="flex flex-col gap-6">
         <div className="mb-1 flex flex-col gap-1">
-          <h4 className="h3-bold text-font-basic">신곡에 대해 얘기해주세요</h4>
+          <h4 className="h3-bold text-font-basic">앨범에 대해 얘기해주세요</h4>
           <p className="p2-regular text-font-middle">
             뮤지션의 한마디가 스트리밍으로 이어져요.
             <br />
-            구체적일수록 음원의 매력을 더 잘 전달할 수 있어요.
+            구체적일수록 앨범의 매력을 더 잘 전달할 수 있어요.
           </p>
         </div>
 
         <section className="flex flex-col gap-2">
-          <div
-            className={`bg-grey1 mb-1 flex h-22 w-22 items-center justify-center overflow-hidden rounded-2xl border ${
-              errors.cover ? "border-danger" : "border-border"
-            }`}
-          >
-            <label className="relative flex h-full w-full cursor-pointer items-center justify-center">
-              {coverPreview ? (
-                <>
-                  <Image
-                    src={coverPreview}
-                    alt="앨범 커버 이미지"
-                    width={88}
-                    height={88}
-                    className="object-cover"
-                  />
+          <div className="mb-1 flex items-center gap-3">
+            <div
+              className={`bg-grey1 flex h-22 w-22 shrink-0 items-center justify-center overflow-hidden rounded-2xl border ${
+                errors.cover ? "border-danger" : "border-border"
+              }`}
+            >
+              <label className="relative flex h-full w-full cursor-pointer items-center justify-center">
+                {coverPreview ? (
+                  <>
+                    <Image
+                      src={coverPreview}
+                      alt="앨범 커버 이미지"
+                      width={88}
+                      height={88}
+                      className="object-cover"
+                    />
 
-                  {/* 딤 + 아이콘 오버레이 */}
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/50">
-                    <ImageIcon className="text-white" size={24} />
+                    {/* 딤 + 아이콘 오버레이 */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                      <ImageIcon className="text-white" size={24} />
+                    </div>
+                  </>
+                ) : (
+                  <div className="c1-medium text-font-light flex flex-col items-center">
+                    <PlusIcon size={40} />
+                    <span>커버 추가</span>
                   </div>
-                </>
-              ) : (
-                <div className="c1-medium text-font-light flex flex-col items-center">
-                  <PlusIcon size={40} />
-                  <span>커버 추가</span>
-                </div>
-              )}
+                )}
 
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) handleSelectImage(file);
-                  e.target.value = "";
-                }}
-              />
-            </label>
+                <input
+                  type="file"
+                  accept=".jpg,.jpeg,.png,.webp"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleSelectImage(file);
+                    e.target.value = "";
+                  }}
+                />
+              </label>
+            </div>
+
+            <div className="text-font-light text-c1 font-regular whitespace-pre-line">
+              <span className="font-semibold">
+                30MB 이하의 JPG, JPEG, PNG,{"\n"}WEBP
+              </span>{" "}
+              형식의 이미지만 업로드할 수 있어요.
+            </div>
           </div>
 
           <Input
@@ -350,7 +357,7 @@ export default function AlbumPage() {
               errors.artist ? "border-danger focus-visible:ring-danger" : ""
             }
             label="뮤지션명"
-            placeholder="아티스트 이름을 입력하세요"
+            placeholder="뮤지션명을 입력하세요"
             maxLength={50}
             value={artist}
             onChange={(e) => updateField("artist", e.target.value, setArtist)}
@@ -369,50 +376,46 @@ export default function AlbumPage() {
             }
           />
 
-          <Input
-            className={
-              errors.date ? "border-danger focus-visible:ring-danger" : ""
-            }
-            label="발매일"
-            placeholder="YYYY.MM.DD"
-            value={date ? format(date, "yyyy.MM.dd") : ""}
-            readOnly
-            iconBtn={
-              <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
-                <DialogTrigger asChild>
-                  <button
-                    className="flex items-center justify-center hover:cursor-pointer"
-                    type="button"
-                    aria-label="발매일 날짜 선택"
-                  >
-                    <CalendarIcon size={24} />
-                  </button>
-                </DialogTrigger>
-                <DialogContent
-                  className="max-w-2xs p-0"
-                  showCloseButton={false}
-                >
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onSelect={(d) => {
-                      setDate(d);
-                      setCalendarOpen(false);
-                    }}
-                    className="flex w-full"
-                    classNames={{
-                      months:
-                        "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                      month: "space-y-4 w-full flex flex-col",
-                      table: "w-full h-full border-collapse space-y-1",
-                      head_row: "",
-                      row: "w-full mt-2",
-                    }}
-                  />
-                </DialogContent>
-              </Dialog>
-            }
-          />
+          <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
+            <DialogTrigger asChild>
+              <div>
+                <Input
+                  className={
+                    errors.date ? "border-danger focus-visible:ring-danger" : ""
+                  }
+                  label="발매일"
+                  placeholder="YYYY.MM.DD"
+                  value={date ? format(date, "yyyy.MM.dd") : ""}
+                  readOnly
+                  iconBtn={
+                    <div className="flex cursor-pointer items-center justify-center">
+                      <CalendarIcon size={24} />
+                    </div>
+                  }
+                />
+              </div>
+            </DialogTrigger>
+
+            <DialogContent className="max-w-2xs p-0" showCloseButton={false}>
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={(d) => {
+                  setDate(d);
+                  setCalendarOpen(false);
+                }}
+                className="flex w-full"
+                classNames={{
+                  months:
+                    "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
+                  month: "space-y-4 w-full flex flex-col",
+                  table: "w-full h-full border-collapse space-y-1",
+                  head_row: "",
+                  row: "w-full mt-2",
+                }}
+              />
+            </DialogContent>
+          </Dialog>
 
           {links.map((link, idx) => (
             <Input
@@ -461,8 +464,8 @@ export default function AlbumPage() {
                 ? "border-danger focus-visible:ring-danger"
                 : ""
             }
-            label="곡에 대한 스토리 (뮤지션의 말)"
-            placeholder="이 곡에 담긴 이야기를 들려주세요"
+            label="뮤지션의 한 마디"
+            placeholder="앨범에 담긴 이야기를 들려주세요"
             maxLength={200}
             value={description}
             onChange={(e) =>
@@ -477,7 +480,7 @@ export default function AlbumPage() {
           onClick={handleSubmit}
           disabled={isSubmitting}
         >
-          {isEditMode ? "수정 완료" : "홍보 링크 만들기"}
+          {isEditMode ? "수정 완료" : "홍보 페이지 만들기"}
         </Button>
       </main>
     </>

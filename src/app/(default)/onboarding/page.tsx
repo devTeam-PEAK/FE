@@ -21,6 +21,7 @@ const SLIDES: Slide[] = [
     titleAfter: "막막하셨죠?",
     description: "이젠 혼자 하지 마세요.\nPEAK가 도와드릴게요!",
     src: "/tutorial/step01.png",
+    imgClassName: "w-[216px]",
   },
   {
     titleBefore: "신곡을 냈다면",
@@ -29,12 +30,14 @@ const SLIDES: Slide[] = [
     description:
       "앨범 정보 입력하면 홍보 페이지 완성!\n페이지 링크를 복사해서\n인스타그램 프로필에 딱 붙여두면 돼요.",
     src: "/tutorial/step02.png",
+    imgClassName: "w-[280px]",
   },
   {
     titleBefore: "팬이 왜 안 느는지",
     titleHighlight: "PEAK가 찾아드려요",
     description: "진단하기를 누르면\n홍보 현황부터 해결책까지 알려줘요",
     src: "/tutorial/step03.png",
+    imgClassName: "w-auto h-full",
   },
 ];
 
@@ -82,10 +85,7 @@ export default function OnboardingPage() {
   return (
     <main className="flex flex-1 flex-col px-5 pb-9">
       <div className="mt-16 flex flex-1 flex-col items-center gap-10 text-center">
-        <div
-          className="embla__viewport h-[574.65px] w-full overflow-hidden"
-          ref={emblaRef}
-        >
+        <div className="embla__viewport w-full overflow-hidden" ref={emblaRef}>
           <div className="embla__container">
             {SLIDES.map((slide, index) => (
               <div
@@ -113,15 +113,13 @@ export default function OnboardingPage() {
                     ))}
                   </p>
                 </div>
-                <div className="flex min-h-[430.24px] items-center justify-center">
+                <div className="flex min-h-84.5 items-center justify-center">
                   <Image
                     src={slide.src}
                     alt="설명 이미지"
                     width={244}
                     height={244}
-                    className={
-                      slide.imgClassName ?? "h-auto w-70 object-contain"
-                    }
+                    className={slide.imgClassName}
                   />
                 </div>
               </div>
@@ -139,7 +137,7 @@ export default function OnboardingPage() {
           ))}
         </div>
 
-        <div className="mt-auto flex w-full flex-col gap-4">
+        <div className="flex w-full flex-col gap-4">
           <Button
             variant="btnPurple"
             size="full"

@@ -53,12 +53,12 @@ export default function Home({ showIntro, isLoggedIn }: Props) {
           height={126}
         />
         <h1 className="h1-bold">
-          신곡 홍보,
+          앨범 홍보,
           <br />
           <span className="text-main">이제 쉽게</span>
           <br />할 수 있어요
         </h1>
-        <p className="text-font-middle p2-regular">
+        <p className="text-font-light p2-semibold">
           뭘 해야 할지 몰라서 답답했다면
           <br />
           PEAK가 딱 맞는 방법을 알려드릴게요

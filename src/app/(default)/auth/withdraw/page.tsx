@@ -24,7 +24,7 @@ export default function WithdrawPage() {
         </p>
       </div>
       <Button asChild variant="btnPurple" size="full">
-        <Link href="/onboarding">메인홈으로 나가기</Link>
+        <Link href="/onboarding">메인으로 이동하기</Link>
       </Button>
     </main>
   );

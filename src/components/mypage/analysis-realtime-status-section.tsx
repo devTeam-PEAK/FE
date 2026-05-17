@@ -14,7 +14,7 @@ export default function RealtimeStatusSection({ realtimeStats }: Props) {
         <li className="flex flex-col items-center gap-3">
           <div className="bg-main-light1 inline-flex rounded-sm px-2 py-1">
             <span className="c1-medium text-font-middle">
-              홍보링크 방문자 수
+              홍보 링크 클릭 수
             </span>
           </div>
 

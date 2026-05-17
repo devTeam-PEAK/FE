@@ -20,8 +20,8 @@ export default function Login() {
           height={174}
         />
         <div className="flex flex-col gap-3">
-          <h1 className="h1-bold">로그인하고 시작해보세요</h1>
-          <p className="text-font-middle p2-regular">
+          <h1 className="h2-bold">로그인하고 시작해보세요</h1>
+          <p className="text-font-light p2-semibold">
             음악에 더 집중할 시간을 드릴게요.
           </p>
         </div>

@@ -3,29 +3,32 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useAlertModal } from "@/stores/alert-modal-store";
+import { logout } from "@/lib/api/auth";
+import { useRouter } from "next/navigation";
 
-export default function MailSuccessModal() {
+export default function AuthErrorModal() {
   const store = useAlertModal();
+  const router = useRouter();
 
-  if (!store.isOpen || store.variant !== "mail-success") return null;
+  if (!store.isOpen || store.variant !== "auth-error") return null;
 
-  const isConfirm = store.type === "confirm";
-
-  const handleCancelClick = () => {
-    if (store.onCancel) store.onCancel();
+  const handleMain = () => {
     store.actions.close();
+    router.push("/");
   };
 
-  const handleActionClick = () => {
-    if (store.onAction) store.onAction();
-    store.actions.close();
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      localStorage.removeItem("accessToken");
+      store.actions.close();
+      router.push("/login");
+    }
   };
 
   return (
-    <div
-      className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 px-5"
-      onClick={handleCancelClick}
-    >
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/50 px-5">
       <div
         role="dialog"
         aria-modal="true"
@@ -43,21 +46,17 @@ export default function MailSuccessModal() {
           )}
         </div>
         <Image
-          src="/character/modal-mail-success.png"
-          alt="mail-success"
+          src="/character/modal-warning.png"
+          alt="auth-error"
           width={189}
           height={140}
         />
-
         <div className="flex w-full gap-3">
-          {isConfirm && (
-            <Button variant="btnWhite" size="md" className="w-auto flex-1" onClick={handleCancelClick}>
-              나중에 볼게요
-            </Button>
-          )}
-
-          <Button variant="btnPurple" size="md" className="w-auto flex-1" onClick={handleActionClick}>
-            확인하러 가기
+          <Button variant="btnWhite" size="md" className="w-auto flex-1" onClick={handleMain}>
+            메인으로 가기
+          </Button>
+          <Button variant="btnPurple" size="md" className="w-auto flex-1" onClick={handleLogout}>
+            로그아웃 하기
           </Button>
         </div>
       </div>

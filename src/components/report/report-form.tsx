@@ -9,13 +9,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { Calendar } from "@/components/ui/calendar";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import BackButton from "@/components/common/back-button";
 import ErrorView from "@/components/common/error-view";
-import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -27,6 +24,7 @@ import {
   validateInstagramProfile,
 } from "@/lib/api/music-promotion";
 import { format } from "date-fns";
+import CalendarInput from "../common/calendar-input";
 
 type ReportFormErrors = {
   promotionId: boolean;
@@ -41,7 +39,6 @@ export default function ReportForm() {
   const promotionIdFromQuery = searchParams.get("promotionId");
 
   const [date, setDate] = useState<Date | undefined>();
-  const [calendarOpen, setCalendarOpen] = useState(false);
   const [selectedPromotionId, setSelectedPromotionId] = useState<string>(
     promotionIdFromQuery ?? ""
   );
@@ -297,57 +294,21 @@ export default function ReportForm() {
                 선택한 날짜 기준으로 피드 게시물의 상호작용이 분석돼요
               </p>
             </div>
-            <Input
-              className={`bg-white ${
-                errors.date ? "border-danger focus-visible:ring-danger" : ""
-              }`}
-              label="발매일"
-              placeholder="YYYY.MM.DD"
-              value={date ? format(date, "yyyy.MM.dd") : ""}
-              readOnly
-              iconBtn={
-                <Dialog open={calendarOpen} onOpenChange={setCalendarOpen}>
-                  <DialogTrigger asChild>
-                    <button
-                      className="flex items-center justify-center hover:cursor-pointer"
-                      type="button"
-                      aria-label="발매일 날짜 선택"
-                    >
-                      <CalendarIcon size={24} />
-                    </button>
-                  </DialogTrigger>
-                  <DialogContent
-                    className="max-w-2xs p-0"
-                    showCloseButton={false}
-                  >
-                    <Calendar
-                      mode="single"
-                      selected={date}
-                      disabled={(d) => {
-                        const today = new Date();
-                        today.setHours(0, 0, 0, 0);
-                        const oneYearAgo = new Date(today);
-                        oneYearAgo.setFullYear(today.getFullYear() - 1);
-                        return d > today || d < oneYearAgo;
-                      }}
-                      onSelect={(d) => {
-                        setDate(d);
-                        setCalendarOpen(false);
-                        setErrors((prev) => ({ ...prev, date: false }));
-                      }}
-                      className="flex w-full"
-                      classNames={{
-                        months:
-                          "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
-                        month: "space-y-4 w-full flex flex-col",
-                        table: "w-full h-full border-collapse space-y-1",
-                        head_row: "",
-                        row: "w-full mt-2",
-                      }}
-                    />
-                  </DialogContent>
-                </Dialog>
-              }
+            <CalendarInput
+              className="bg-white"
+              label="날짜 선택하기"
+              value={date}
+              error={errors.date}
+              onChange={(d) => {
+                setDate(d);
+
+                if (d) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    date: false,
+                  }));
+                }
+              }}
             />
           </section>
 

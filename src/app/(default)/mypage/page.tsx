@@ -127,12 +127,12 @@ export default function MyPage() {
       ) : (
         <div className="flex flex-1 flex-col items-center justify-center gap-6 text-center">
           <p className="p2-medium text-font-middle">
-            현재 만들어진 홍보 링크가 없어요.
+            현재 만들어진 홍보 페이지가 없어요.
             <br />
-            링크를 만들고 앨범 홍보를 시작해보세요!
+            아래 버튼을 눌러 앨범 홍보를 시작해보세요!
           </p>
           <Button variant="btnPurple" size="full" asChild>
-            <Link href="/album">홍보 링크 만들러 가기 💨</Link>
+            <Link href="/album">홍보 페이지 만들러 가기 💨</Link>
           </Button>
         </div>
       )}

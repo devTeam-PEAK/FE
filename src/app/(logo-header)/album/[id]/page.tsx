@@ -49,7 +49,7 @@ export default async function AlbumDetailPage({ params, searchParams }: Props) {
         {isLoggedIn ? (
           <>
             <span className="c1-medium text-font-light">
-              팬들이 링크를 눌렀을 때 이렇게 보여요
+              팬들이 링크를 눌렀을 때 이렇게 보여요.
             </span>
             <span className="p2-bold text-font-middle mb-2">
               마음에 들면 인스타그램 프로필에 바로 붙여보세요!
@@ -61,7 +61,7 @@ export default async function AlbumDetailPage({ params, searchParams }: Props) {
               이 노래가 마음에 든다면?
             </span>
             <span className="p2-bold text-font-middle mb-2">
-              함께 듣고 싶은 사람에게 공유하세요
+              함께 듣고 싶은 사람에게 공유하세요.
             </span>
           </>
         )}

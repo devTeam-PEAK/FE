@@ -53,7 +53,7 @@ export default function SettingPage() {
         <>
           탈퇴 시{" "}
           <span className="p2-semibold">
-            현재 사용 중인 모든 링크와 정보가 사라지고
+            현재 제작된 모든 페이지와 링크 정보가 사라지고
           </span>
           {"\n"}
           이후{" "}

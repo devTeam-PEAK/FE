@@ -50,7 +50,7 @@ export default function AlbumActionButton({
         </Button>
       ) : (
         <Button variant="btnPurple" size="md" onClick={handleCopy}>
-          🔗 링크 복사
+          링크 복사하기
         </Button>
       )}
 

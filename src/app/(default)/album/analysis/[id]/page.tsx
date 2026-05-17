@@ -1,4 +1,4 @@
-import AlbumAnalysisPage from "../_client-album-analysis";
+import AlbumAnalysisPage from "@/components/mypage/album-analysis-page";
 
 interface Props {
   params: Promise<{

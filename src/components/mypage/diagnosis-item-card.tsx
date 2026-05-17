@@ -31,15 +31,13 @@ export default function DiagnosisItemCard({
   const title = isAnalyzing ? "진단 결과 대기중이에요" : actionTitle;
 
   const description = isAnalyzing
-    ? "평균 1~2일 이내 결과를 확인하실 수 있어요. 메일로 알려드릴게요."
+    ? "평균 1일 이내에 결과를 확인하실 수 있어요.\n진단이 완료되면 메일로 알려드릴게요."
     : headline;
 
   const handleCardClick = () => {
     if (!isAnalyzed) return;
 
-    router.push(
-      `/report/${promotionId}?diagnosisId=${diagnosisId}`
-    );
+    router.push(`/report/${promotionId}?diagnosisId=${diagnosisId}`);
   };
 
   return (
@@ -66,7 +64,9 @@ export default function DiagnosisItemCard({
 
             <div className="flex flex-col gap-1">
               <p className="p1-bold text-font-middle">{title}</p>
-              <p className="p2-regular text-font-middle">{description}</p>
+              <p className="p2-regular text-font-middle whitespace-pre-line">
+                {description}
+              </p>
             </div>
           </div>
         </Card>

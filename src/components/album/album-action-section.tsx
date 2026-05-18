@@ -51,7 +51,7 @@ export default function AlbumActionSection({
       toast.success("링크가 복사되었습니다!", { position: "bottom-center" });
 
       if (isMusician) {
-        router.push("/album/promote");
+        router.push(`/album/promote?id=${promotionId}`);
       }
     } catch {
       toast.error("복사에 실패했습니다.", { position: "bottom-center" });

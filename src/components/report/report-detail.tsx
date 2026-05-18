@@ -68,7 +68,8 @@ export default function ReportDetail() {
       });
       const blob = await fetch(dataUrl).then((r) => r.blob());
       const file = new File([blob], "report.jpg", { type: "image/jpeg" });
-      if (navigator.canShare?.({ files: [file] })) {
+      const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      if (isMobile && navigator.canShare?.({ files: [file] })) {
         await navigator.share({ files: [file] });
       } else {
         const link = document.createElement("a");

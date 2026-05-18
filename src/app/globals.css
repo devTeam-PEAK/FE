@@ -8,6 +8,8 @@
   --font-base: var(--font-poppins), var(--font-pretendard), sans-serif;
 
   --max-width: 600px;
+  --header-height: 3.5rem;
+  --page-padding-bottom: 2.25rem;
 
   --background: oklch(1 0 0);
 

@@ -200,7 +200,7 @@ export default function AlbumPage() {
         message: (
           <>
             <span className="p2-semibold">
-              스포티파이 ∙ 애플뮤직 ∙ 멜론 ∙ 유튜브뮤직{"\n"}사운드클라우드
+              스포티파이 ∙ 유튜브뮤직 ∙ 애플뮤직 ∙ 멜론{"\n"}사운드클라우드
             </span>{" "}
             링크만 입력 가능해요.
           </>
@@ -395,7 +395,7 @@ export default function AlbumPage() {
                 }
                 key={idx}
                 label={idx === 0 ? "스트리밍 링크" : undefined}
-                placeholder="링크를 붙여넣으세요"
+                placeholder="링크를 추가하세요"
                 value={link}
                 onChange={(e) => updateLink(idx, e.target.value)}
                 onBlur={(e) => handleBlurLink(e.target.value, idx)}
@@ -414,17 +414,23 @@ export default function AlbumPage() {
               />
             ))}
             {links.length < MAX_LINK && (
-              <button
-                className="mb-1 flex w-fit flex-col items-center self-center hover:cursor-pointer"
-                type="button"
-                onClick={handleAddLink}
-                disabled={links.length >= MAX_LINK}
-              >
-                <div className="bg-font-light mb-1 flex h-5 w-5 items-center justify-center rounded-full">
-                  <PlusIcon className="text-grey1" size={16} />
-                </div>
-                <span className="c1-medium text-font-light">링크 추가</span>
-              </button>
+              <>
+                <p className="c1-medium text-font-light">
+                  * 스포티파이, 유튜브뮤직, 애플뮤직, 멜론, 사운드클라우드만
+                  가능해요
+                </p>
+                <button
+                  className="my-1 flex w-fit flex-col items-center self-center hover:cursor-pointer"
+                  type="button"
+                  onClick={handleAddLink}
+                  disabled={links.length >= MAX_LINK}
+                >
+                  <div className="bg-font-light mb-1 flex h-5 w-5 items-center justify-center rounded-full">
+                    <PlusIcon className="text-grey1" size={16} />
+                  </div>
+                  <span className="c1-medium text-font-light">링크 추가</span>
+                </button>
+              </>
             )}
 
             <Textarea

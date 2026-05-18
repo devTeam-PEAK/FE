@@ -1,12 +1,29 @@
 import FadeMotion from "@/components/common/fade-motion";
 import { Button } from "@/components/ui/button";
+import BackButton from "@/components/common/back-button";
 import Image from "next/image";
 import Link from "next/link";
+import ErrorView from "@/components/common/error-view";
 
-export default function Promote() {
+interface Props {
+  searchParams: Promise<{ id?: string }>;
+}
+
+export default async function Promote({ searchParams }: Props) {
+  const { id } = await searchParams;
+
+  if (!id)
+    return (
+      <ErrorView
+        title={`요청하신 화면을\n불러오지 못했어요`}
+        description={`페이지가 없거나 연결이 잠시 불안정해요.\n잠시 후 다시 시도해주세요.`}
+      />
+    );
+
   return (
-    <FadeMotion>
+    <FadeMotion x={20}>
       <main className="flex min-h-[calc(100dvh-var(--header-height)-var(--page-padding-bottom))] flex-col">
+        <BackButton href={`/album/${id}`} push />
         <div className="mb-6 flex flex-col gap-16">
           <div className="mt-7 flex flex-col gap-1">
             <h4 className="h3-bold text-font-basic">홍보 링크 복사 완료!</h4>

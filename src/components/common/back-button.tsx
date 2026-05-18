@@ -5,13 +5,16 @@ import { ChevronLeft } from "lucide-react";
 interface BackButtonProps {
   href?: string;
   title?: string;
+  push?: boolean;
 }
 
-export default function BackButton({ href, title }: BackButtonProps) {
+export default function BackButton({ href, title, push }: BackButtonProps) {
   const router = useRouter();
 
   const handleBack = () => {
-    if (href && window.history.length <= 1) {
+    if (push && href) {
+      router.push(href);
+    } else if (href && window.history.length <= 1) {
       router.push(href);
     } else {
       router.back();

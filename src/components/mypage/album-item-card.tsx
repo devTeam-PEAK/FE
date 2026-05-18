@@ -102,7 +102,7 @@ function AlbumItemCard({ album, priority = false }: Props) {
                   "진단중"
                 ) : (
                   <Link href={`/report?promotionId=${album.promotionId}`}>
-                    진단하기
+                    진단 받기
                   </Link>
                 )}
               </Button>

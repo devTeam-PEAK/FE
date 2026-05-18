@@ -116,7 +116,7 @@ export default function ReportDetail() {
 
   return (
     <>
-      <BackButton href="/report" />
+      <BackButton />
       <main className="flex flex-col gap-9">
         <div className="bg-allwhite flex min-h-screen flex-col gap-9">
           <div className="flex flex-col items-start gap-1">

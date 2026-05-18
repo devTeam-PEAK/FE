@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getMe } from "@/lib/api/auth";
 
 interface Props {
+  isLoggedIn: boolean;
   promotionId: number;
   musicianId: number;
   trackingUrl: string;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export default function AlbumActionSection({
+  isLoggedIn,
   promotionId,
   musicianId,
   trackingUrl,
@@ -25,16 +27,15 @@ export default function AlbumActionSection({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isLoggedIn) {
+      setLoading(false);
+      return;
+    }
+
     const fetchMe = async () => {
       try {
         const me = await getMe();
-
-        if (!me) {
-          setIsMusician(false);
-          return;
-        }
-
-        setIsMusician(me?.id === musicianId);
+        setIsMusician(me.id === musicianId);
       } catch {
         setIsMusician(false);
       } finally {
@@ -43,7 +44,7 @@ export default function AlbumActionSection({
     };
 
     fetchMe();
-  }, [musicianId]);
+  }, [isLoggedIn, musicianId]);
 
   const handleCopy = async () => {
     try {

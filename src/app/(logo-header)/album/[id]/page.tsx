@@ -1,5 +1,6 @@
 import AlbumDetail from "@/components/album/album-detail";
 import AlbumActionSection from "@/components/album/album-action-section";
+import { cookies } from "next/headers";
 import { getMusicPromotion } from "@/lib/api/music-promotion";
 import { getStreamingCode } from "@/utils/album";
 import FadeMotion from "@/components/common/fade-motion";
@@ -10,6 +11,9 @@ interface Props {
 }
 
 export default async function AlbumDetailPage({ params, searchParams }: Props) {
+  const cookieStore = await cookies();
+  const isLoggedIn = cookieStore.has("accessToken");
+
   const { id } = await params;
   const { from } = await searchParams;
 
@@ -46,6 +50,7 @@ export default async function AlbumDetailPage({ params, searchParams }: Props) {
         </div>
 
         <AlbumActionSection
+          isLoggedIn={isLoggedIn}
           promotionId={promotionId}
           musicianId={data.musicianId}
           trackingUrl={data.trackingUrl}

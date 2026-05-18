@@ -28,7 +28,13 @@ export default function AlbumActionSection({
     const fetchMe = async () => {
       try {
         const me = await getMe();
-        setIsMusician(me.id === musicianId);
+
+        if (!me) {
+          setIsMusician(false);
+          return;
+        }
+
+        setIsMusician(me?.id === musicianId);
       } catch {
         setIsMusician(false);
       } finally {

@@ -19,7 +19,7 @@ export async function logout(): Promise<void> {
  * 내 정보 조회
  * [GET] /me
  */
-export async function getMe(): Promise<GetMeRes> {
+export async function getMe(): Promise<GetMeRes | null> {
   try {
     const res = await fetcher<GetMeRes>("/me", {
       method: "GET",
@@ -27,7 +27,7 @@ export async function getMe(): Promise<GetMeRes> {
 
     return res;
   } catch {
-    throw new Error("[auth]: 내 정보 조회 실패");
+    return null;
   }
 }
 

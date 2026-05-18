@@ -11,7 +11,7 @@ export default function BackButton({ href, title }: BackButtonProps) {
   const router = useRouter();
 
   const handleBack = () => {
-    if (href && window.history.length <= 1) {
+    if (href) {
       router.push(href);
     } else {
       router.back();

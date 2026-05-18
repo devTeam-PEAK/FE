@@ -417,7 +417,7 @@ export default function AlbumPage() {
               <>
                 <p className="c1-medium text-font-light">
                   * 스포티파이, 유튜브뮤직, 애플뮤직, 멜론, 사운드클라우드만
-                  가능해요
+                  가능해요.
                 </p>
                 <button
                   className="my-1 flex w-fit flex-col items-center self-center hover:cursor-pointer"

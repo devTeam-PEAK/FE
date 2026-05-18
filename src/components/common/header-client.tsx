@@ -15,12 +15,17 @@ export default function HeaderClient({ isLoggedIn }: Props) {
 
   const isMyPage = pathname === "/mypage";
   const isSettingPage = pathname === "/setting";
+  const isOnboarding = pathname === "/onboarding";
 
   return (
     <div className="sticky top-0 z-40 flex h-14 w-full items-center justify-between bg-white">
-      <Link href="/">
+      {isOnboarding ? (
         <Image src="/logo.svg" alt="Logo" width={56} height={14} />
-      </Link>
+      ) : (
+        <Link href="/">
+          <Image src="/logo.svg" alt="Logo" width={56} height={14} />
+        </Link>
+      )}
 
       {isLoggedIn && !isSettingPage && (
         <Link href={isMyPage ? "/setting" : "/mypage"}>

@@ -75,7 +75,7 @@ export default function CalendarInput({
       </DialogTrigger>
 
       <DialogContent
-        className="max-w-2xs p-0"
+        className="flex max-w-2xs flex-col p-0"
         showCloseButton={false}
         aria-describedby={undefined}
       >
@@ -88,18 +88,18 @@ export default function CalendarInput({
           mode="single"
           selected={tempDate}
           onSelect={setTempDate}
-          className="flex w-full"
+          className="w-full"
           classNames={{
             months:
               "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 flex-1",
             month: "space-y-4 w-full flex flex-col",
-            table: "w-full h-full border-collapse space-y-1",
+            table: "w-full border-collapse space-y-1",
             head_row: "",
             row: "w-full mt-2",
           }}
         />
 
-        <DialogFooter>
+        <DialogFooter className="px-4 pt-2 pb-4">
           <Button variant="btnWhite" size="mini" onClick={handleCancel}>
             취소
           </Button>

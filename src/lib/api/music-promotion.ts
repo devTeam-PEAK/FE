@@ -147,7 +147,7 @@ export async function getMyPagePromotions(
 export function subscribePromotionStream({
   onPromotionUpdated,
 }: {
-  onPromotionUpdated: (updatedPromotion: AlbumItem) => void;
+  onPromotionUpdated: () => void;
 }) {
   const controller = new AbortController();
 
@@ -178,10 +178,7 @@ export function subscribePromotionStream({
           return;
 
         case "promotion-analysis-updated": {
-          const updatedPromotion: AlbumItem = JSON.parse(event.data);
-
-          onPromotionUpdated(updatedPromotion);
-
+          onPromotionUpdated();
           return;
         }
       }

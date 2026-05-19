@@ -21,6 +21,7 @@ export interface AlbumItem {
   title: string;
   coverImageUrl: string;
   createdAt: string;
+  lastActivityAt: string;
   totalTrackingLinkClickCount: number;
   totalStreamingLinkClickCount: number;
   analysis: {

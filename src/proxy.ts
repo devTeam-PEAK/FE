@@ -15,13 +15,12 @@ export function proxy(request: NextRequest) {
     PUBLIC_PATHS.some((p) => pathname.startsWith(p)) ||
     /^\/album\/\d+$/.test(pathname);
 
-  if (pathname === "/") {
-    if (!request.cookies.has("onboarding")) {
-      return NextResponse.redirect(new URL("/onboarding", request.url));
-    }
-    return;
+  // onboarding 체크
+  if (pathname === "/" && !request.cookies.has("onboarding")) {
+    return NextResponse.redirect(new URL("/onboarding", request.url));
   }
 
+  // 인증 체크
   if (!isPublic && !request.cookies.has("refreshToken")) {
     return NextResponse.redirect(new URL("/login", request.url));
   }

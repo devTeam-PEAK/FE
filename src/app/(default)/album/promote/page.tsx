@@ -25,7 +25,7 @@ export default async function Promote({ searchParams }: Props) {
       <main className="flex min-h-[calc(100dvh-var(--header-height)-var(--page-padding-bottom))] flex-col">
         <BackButton href={`/album/${id}`} />
         <div className="mb-6 flex flex-col gap-16">
-          <div className="mt-7 flex flex-col gap-1">
+          <div className="flex flex-col gap-1">
             <h4 className="h3-bold text-font-basic">홍보 링크 복사 완료!</h4>
             <p className="p2-regular text-font-middle">
               이제 인스타 프로필에 링크를 붙여두세요.
